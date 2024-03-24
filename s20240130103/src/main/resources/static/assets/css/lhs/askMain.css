@@ -1,0 +1,28 @@
+@import url("https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css");
+.fnt-nanum {
+  font-family: "NanumSquare", sans-serif;
+}
+.pagetitle{
+    margin: 15px 0;
+}
+.wid-80 {
+  width: 80%;
+}
+.contact .info-box {
+  padding: 28px 30px;
+}
+.contact .info-box i {
+  font-size: 38px;
+  line-height: 0;
+  color: #4154f1;
+  margin-bottom: 10px;
+}
+.list-div {
+  width: 1500px;
+  height: 700px;
+  margin: 30px 0;
+}
+.list-div-content{
+    width: 900px;
+    padding: 15px;
+}

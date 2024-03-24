@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blackberry.s20240130103.ProjectMapper">
+			
+	<select id="kphProjectListByUserNo" parameterType="Long" resultType="KphProject">
+		SELECT *
+		FROM PROJECT p , (SELECT PROJECT_NO FROM USER_PROJECT_MANY WHERE USER_NO = #{user_no}) upm
+		WHERE p.PROJECT_NO = upm.PROJECT_NO
+			AND p.PROJECT_DELETE_CHK =0
+		ORDER BY p.PROJECT_COMP_CHK ASC, PROJECT_END ASC
+	</select>
+	
+	<select id="KphIsProjectCompleted" parameterType="java.lang.Long" resultType="int">
+		SELECT PROJECT_COMP_CHK
+		FROM PROJECT
+		WHERE PROJECT_NO = #{project_no}
+	</select>
+	
+	<select id="kphProjectTitleByProjectNo" parameterType="Long" resultType="string">
+		SELECT PROJECT_TITLE
+		FROM PROJECT
+		WHERE PROJECT_NO = #{project_no}
+	</select>
+	
+	<select id="kphProjectLeaderNo" parameterType="java.lang.Long" resultType="java.lang.Long">
+		SELECT USER_NO
+		FROM PROJECT
+		WHERE PROJECT_NO = #{project_no}
+	</select>
+	
+	<select id="kphGetProjectByProjectNo" parameterType="KphProject" resultType="KphProject">
+		SELECT PROJECT_NO, PROJECT_TITLE, PROJECT_CONTENT, PROJECT_START, PROJECT_END
+		FROM PROJECT
+		WHERE PROJECT_NO = #{project_no}
+	</select>
+	
+	<update id="kphProjectUpdate" parameterType="KphProject">
+		UPDATE PROJECT
+		SET PROJECT_TITLE = #{project_title},
+			  PROJECT_CONTENT = #{project_content},
+			  PROJECT_START = #{project_start},
+			  PROJECT_END = #{project_end},
+			  PROJECT_UPDATE_DATE = SYSDATE
+	 	WHERE PROJECT_NO = #{project_no}
+	</update>
+	
+	<update id="kphProjectDelete" parameterType="KphProject">
+		UPDATE PROJECT
+		SET PROJECT_DELETE_CHK = 1, PROJECT_UPDATE_DATE = SYSDATE
+	 	WHERE PROJECT_NO = #{project_no}
+	</update>
+	
+	<update id="KphProjectEnd" parameterType="KphProject">
+		UPDATE PROJECT
+		SET PROJECT_COMP_CHK = 1, PROJECT_UPDATE_DATE = SYSDATE
+	 	WHERE PROJECT_NO = #{project_no}
+	</update>
+	
+</mapper>

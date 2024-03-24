@@ -1,0 +1,43 @@
+@import url("https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css");
+#main{
+  padding: 20px;
+}
+.fnt-nanum {
+  font-family: "NanumSquare", sans-serif;
+}
+.fnt-size20 {
+  font-size: 20px;
+}
+.bg-white{
+  background-color: white;
+}
+.card-top{
+  margin-bottom: 20px;
+}
+.title-span{
+  background-color: red;
+  color: white;
+  margin-left: 10px;
+  font-size: 15px;
+  padding: 2px 3px;
+  border-radius: 5px;
+}
+.writer-span{
+  color: gray;
+  font-size: 12px;
+  margin-left: 5px;
+}
+.main-detail {
+  width: 1100px;
+  min-height: 700px;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.table-style{
+  width: 1100px;
+  border-radius: 10px;
+}
+.card-bottom button{
+  margin-left: 10px;
+}

@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blackberry.s20240130103.lhs.Admin">
+    <select id="LhsAdminCntMapget"  resultType="java.util.HashMap">
+		SELECT u.all_user_cnt,ba.all_boardadmin_cnt,bcr.all_coment_cnt,bc.all_board_cnt,tu.today_user_cnt,tba.today_boardadmin_cnt,tbcr.today_coment_cnt,tbc.today_board_cnt
+				FROM (SELECT count(*) all_boardadmin_cnt FROM BOARD_ADMIN ba) ba,
+				(SELECT count(*) all_user_cnt FROM users u ) u,
+				(SELECT count(*) all_coment_cnt FROM BOARD_COMM_REPLY bcr ) bcr,
+				(SELECT count(*) all_board_cnt FROM BOARD_COMM bc ) bc,
+			    (select count(*) today_user_cnt from users u where TRUNC(u.user_date) = TRUNC(SYSDATE)) tu,
+			    (select count(*) today_boardadmin_cnt from BOARD_ADMIN ba where TRUNC(ba.admin_date) = TRUNC(SYSDATE)) tba,
+			    (select count(*) today_coment_cnt from BOARD_COMM_REPLY bcr where TRUNC(bcr.creply_date) = TRUNC(SYSDATE)) tbcr,
+			    (select count(*) today_board_cnt FROM BOARD_COMM bc where TRUNC(bc.cboard_date) = TRUNC(SYSDATE)) tbc
+	</select>
+	<select id="LhsAdminJoinUserCnt5day" resultType="java.util.HashMap">
+		<![CDATA[
+	    SELECT TRUNC(a.day) AS day, NVL(COUNT(u.user_date), 0) user_cnt
+		FROM (SELECT TRUNC(SYSDATE - LEVEL) AS day FROM DUAL CONNECT BY LEVEL <= 5) a
+		LEFT JOIN USERS u ON TRUNC(u.user_date) = a.day AND u.USER_DELETE_CHK = 0
+		GROUP BY TRUNC(a.day)
+		ORDER BY TRUNC(a.day) DESC
+	    ]]>
+	</select>
+	
+	<select id="LhsAdminDeleteUserList" resultType="LhsUser">
+		<![CDATA[
+	    SELECT u.*,c.COMM_CONTENT 
+		FROM USERS u,COMM c 
+		WHERE u.USER_DELETE_CHK = 1 
+		AND u.USER_RANK_BIG = c.COMM_BIG 
+		AND u.USER_RANK_MID = c.COMM_MID 
+		AND rownum <= 3
+		ORDER BY u.USER_UPDATE_DATE
+	    ]]>
+	</select>
+	
+	<select id="LhsAdminBoardAdminList" resultType="LhsBoardAdmin">
+		<![CDATA[
+	    SELECT ba.*,u.USER_NAME,u.user_id
+		FROM BOARD_ADMIN ba,USERS u
+		WHERE ba.ADMIN_REPLY_CHK = 0
+		AND ba.USER_NO = u.USER_NO
+		AND rownum <= 5
+		ORDER BY admin_date desc
+	    ]]>
+	</select>
+	
+	<select id="LhsAdminBoardCommCnt" parameterType="LhsBoardComm" resultType="int">
+		select count(*)
+		from board_comm b,USERS u
+		WHERE
+		<choose>
+			<when test="searchkind=='id'">
+				u.user_id like '%'||#{searchValue}||'%' AND
+			</when>
+			<when test="searchkind=='title'">
+				b.cboard_title like '%'||#{searchValue}||'%' AND
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+		b.USER_NO = u.USER_NO
+	</select>
+	
+	<select id="LhsAdminBoardCommList" parameterType="LhsBoardComm" resultType="LhsBoardComm">
+		SELECT a2.*
+		from(SELECT rownum rn, a.*
+			FROM (SELECT u.USER_NAME ,u.USER_ID ,c.COMM_CONTENT ,bc.*
+					FROM BOARD_COMM bc ,USERS u,COMM c 
+					WHERE 
+					<choose>
+						<when test="searchkind=='id'">
+							u.user_id like '%'||#{searchValue}||'%' AND
+						</when>
+						<when test="searchkind=='title'">
+							bc.cboard_title like '%'||#{searchValue}||'%' AND
+						</when>
+						<otherwise>
+						</otherwise>
+					</choose>
+					bc.USER_NO = u.USER_NO 
+					AND bc.COMM_BIG = c.COMM_BIG 
+					AND bc.COMM_MID = c.COMM_MID 
+					ORDER BY bc.CBOARD_DELETE_CHK DESC,bc.cboard_date desc) a) a2
+		WHERE a2.rn BETWEEN #{start} AND #{end}
+	</select>
+	
+	<select id="LhsAdminBoardOne" resultType="LhsBoardComm" parameterType="LhsBoardComm">
+		SELECT bc.*,a.reply_cnt,c.COMM_CONTENT,u.USER_NAME,u.user_id
+		FROM BOARD_COMM bc,COMM c,USERS u ,(SELECT bc.cboard_no,count(bcr.CBOARD_NO) reply_cnt
+							FROM BOARD_COMM bc,BOARD_COMM_REPLY bcr
+							WHERE bc.CBOARD_NO = #{cboard_no}
+							AND bc.CBOARD_NO = bcr.CBOARD_NO(+) 
+							GROUP BY bc.CBOARD_NO) a
+		WHERE bc.CBOARD_NO = a.cboard_no
+		AND bc.USER_NO = u.USER_NO
+		AND bc.COMM_BIG = c.COMM_BIG 
+		AND bc.COMM_MID = c.COMM_MID 
+	</select>
+	
+	<delete id="LhsAdminBoardDelete" parameterType="LhsBoardComm">
+		delete from board_comm bc where bc.cboard_no = #{cboard_no}
+	</delete>
+	
+	<select id="LhsUsersCnt" parameterType="LhsUser" resultType="int">
+		select count(*)
+		from USERS u
+		<choose>
+			<when test="searchkind=='id'">
+				WHERE u.user_id like '%'||#{searchValue}||'%'
+			</when>
+			<when test="searchkind=='name'">
+				WHERE u.user_name like '%'||#{searchValue}||'%'
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="LhsAdminUserList" parameterType="LhsUser" resultType="LhsUser">
+		SELECT a.*
+		FROM (SELECT rownum rn, a.*
+				FROM (SELECT u.*,c.COMM_CONTENT 
+				FROM USERS u ,COMM c 
+				WHERE u.USER_RANK_BIG = c.COMM_BIG 
+				AND u.USER_RANK_MID =c.COMM_MID
+				<choose>
+					<when test="searchkind=='id'">
+						AND u.user_id like '%'||#{searchValue}||'%'
+					</when>
+					<when test="searchkind=='name'">
+						AND u.user_name like '%'||#{searchValue}||'%'
+					</when>
+					<otherwise>
+					</otherwise>
+				</choose>
+				ORDER BY u.USER_DELETE_CHK desc,u.USER_DATE desc) a) a
+		WHERE a.rn BETWEEN #{start} AND #{end}
+	</select>
+	
+	<select id="LhsAdminUserOne" parameterType="LhsUser" resultType="LhsUser">
+		select u.*,c.comm_content
+		from users u,comm c
+		where u.user_no = #{user_no}
+		and u.user_rank_big = c.comm_big
+		and u.user_rank_mid = c.comm_mid
+	</select>
+	
+	<delete id="LhsAdminUserDelete" parameterType="LhsUser">
+		delete from users u where u.user_no = #{user_no}
+	</delete>
+	
+	<select id="LhsAdminReplyCnt" parameterType="LhsReply" resultType="int">
+		select count(*)
+		from board_comm_reply bcr
+		<choose>
+			<when test="searchkind=='id'">
+				WHERE bcr.USER_NO = (SELECT u.USER_NO FROM USERS u WHERE u.user_id = #{searchValue})
+			</when>
+			<when test="searchkind=='cboard_no'">
+				WHERE bcr.cboard_no = #{searchValue}
+			</when>
+			<when test="searchkind=='creply_content'">
+				WHERE bcr.creply_content like '%'||#{searchValue}||'%'
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="LhsAdminReplyList" parameterType="LhsReply" resultType="LhsReply">
+		SELECT a.*
+		FROM (SELECT rownum rn,a.*
+				FROM (SELECT bc.CBOARD_TITLE ,u.USER_ID,bcr.*
+				FROM board_comm_reply bcr,USERS u,BOARD_COMM bc 
+				WHERE bcr.USER_NO =u.USER_NO 
+				AND bcr.CBOARD_NO = bc.CBOARD_NO(+)
+				<choose>
+					<when test="searchkind=='id'">
+						AND bcr.USER_NO = (SELECT u.USER_NO FROM USERS u WHERE u.user_id = #{searchValue})
+					</when>
+					<when test="searchkind=='cboard_no'">
+						AND bcr.cboard_no = #{searchValue}
+					</when>
+					<when test="searchkind=='creply_content'">
+						AND bcr.creply_content like '%'||#{searchValue}||'%'
+					</when>
+					<otherwise>
+					</otherwise>
+				</choose>
+				ORDER BY bcr.CREPLY_DELETE_CHK desc,bcr.CBOARD_NO,bcr.creply_group,bcr.CREPLY_LEVEL) a) a
+		WHERE a.rn BETWEEN #{start} AND #{end}
+	</select>
+	
+	<delete id="LhsAdminReplyDelete" parameterType="LhsReply">
+		delete from board_comm_reply bcr where bcr.creply_no=#{creply_no}
+	</delete>
+	
+	
+	<select id="LhsAdminAskCnt" parameterType="Ask" resultType="int">
+		select count(*)
+		from board_admin ba
+		<choose>
+			<when test="search=='title'">
+				WHERE ba.admin_title like '%'||#{keyword}||'%'
+			</when>
+			<when test="search=='id'">
+				WHERE ba.user_no = (SELECT u.USER_NO FROM USERS u WHERE u.user_id = #{keyword})
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="LhsAdminAskList" parameterType="Ask" resultType="Ask">
+		SELECT a.*
+		FROM (SELECT rownum rn, a.*
+				FROM (SELECT u.user_id,ba.*
+				FROM board_admin ba, users u
+				WHERE ba.user_no = u.user_no
+				<choose>
+					<when test="search=='title'">
+						and ba.admin_title like '%'||#{keyword}||'%'
+					</when>
+					<when test="search=='id'">
+						and ba.user_no = (SELECT u.USER_NO FROM USERS u WHERE u.user_id = #{keyword})
+					</when>
+					<otherwise>
+					</otherwise>
+				</choose>
+				ORDER BY ba.admin_reply_chk,ba.admin_reply_group,ba.admin_date) a) a
+		WHERE a.rn BETWEEN #{start} AND #{end}
+	</select>
+	
+	<select id="LhsAdminAskOne" parameterType="Ask" resultType="Ask">
+		select u.user_id,ba.*
+		from board_admin ba,users u
+		where ba.user_no = #{user_no}
+		and ba.admin_no = #{admin_no}
+		and ba.user_no = u.user_no
+	</select>
+	
+	<insert id="LhsAdminAskInsert" parameterType="Ask">
+		insert into
+		board_admin values
+		(#{user_no},(select NVL(MAX(admin_no),0)+1 from board_admin where user_no = #{user_no}),sysdate,#{admin_title},#{admin_content},null,#{admin_reply_group},1,#{admin_reply_user})
+	</insert>
+	
+	<update id="LhsAdminAskUpdate" parameterType="Ask">
+		update board_admin
+		set admin_reply_chk = 1
+		where admin_no = #{admin_reply_group}
+		and user_no = #{admin_reply_user}
+	</update>
+	
+</mapper>

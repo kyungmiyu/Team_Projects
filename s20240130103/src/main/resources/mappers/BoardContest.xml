@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blackberry.s20240130103.BoardContestMapper">
+	<select id="ykmGetCntPostList" parameterType="YkmBoardComm" resultType="YkmBoardComm">
+		SELECT 	a.*
+		FROM (SELECT rownum rn, a.*
+		FROM (SELECT B.CBOARD_NO, B.CBOARD_TITLE, B.CBOARD_VIEWCNT, B.CBOARD_DATE, B.COMM_BIG, B.COMM_BIG2, B.COMM_MID, B.COMM_MID2, U.USER_ID, U.USER_NIC,
+			  (SELECT COUNT(creply_no) FROM BOARD_COMM_REPLY WHERE CREPLY_DELETE_CHK = 0 AND CBOARD_NO = B.CBOARD_NO) AS reply_count
+		 		FROM BOARD_COMM B, USERS U
+		 		WHERE B.COMM_BIG = 200 
+		 		AND B.COMM_MID = 10
+		 		AND B.USER_NO = U.USER_NO
+		 		AND B.CBOARD_DELETE_CHK = 0
+		 		<choose>
+		 			<when test='type == "A"'>
+		 				AND (B.CBOARD_TITLE LIKE '%'||#{keyword}||'%'
+		                    OR B.CBOARD_CONTENT LIKE '%'||#{keyword}||'%'
+		                    OR U.USER_NIC = #{keyword}
+		                    )
+			 		</when>
+					<when test='type == "TC"'>
+						AND (B.CBOARD_TITLE LIKE '%'||#{keyword}||'%' OR B.CBOARD_CONTENT LIKE '%'||#{keyword}||'%')
+					</when>
+					<when test='type == "W"'>
+						AND U.USER_NIC = #{keyword}
+					</when>
+					<otherwise>
+					</otherwise>
+				</choose>
+				ORDER BY B.CBOARD_DATE DESC) a)a
+		WHERE rn BETWEEN #{start} AND ${end}
+	</select>
+	
+	<select id="ykmGetCntTotalCount" parameterType="YkmBoardComm" resultType="int" >
+		SELECT COUNT(*)
+		FROM BOARD_COMM B, USERS U
+		WHERE B.USER_NO = U.USER_NO
+		  AND B.COMM_BIG = 200
+	 	  AND B.COMM_MID = 10
+	 	  AND B.CBOARD_DELETE_CHK = 0
+	 	  <choose>
+ 			<when test='type == "A"'>
+ 				AND (B.CBOARD_TITLE LIKE '%'||#{keyword}||'%'
+                    OR B.CBOARD_CONTENT LIKE '%'||#{keyword}||'%'
+                    OR U.USER_NIC = #{keyword}
+                    )
+	 		</when>
+			<when test='type == "TC"'>
+				AND (B.CBOARD_TITLE LIKE '%'||#{keyword}||'%' OR B.CBOARD_CONTENT LIKE '%'||#{keyword}||'%')
+			</when>
+			<when test='type == "W"'>
+				AND U.USER_NIC = #{keyword}
+			</when>
+		</choose>
+	</select>
+	
+	<insert id="ykmWriteCntPost" parameterType="YkmBoardComm" useGeneratedKeys="true" keyColumn="cboard_no" keyProperty="cboard_no">
+		INSERT INTO BOARD_COMM (CBOARD_NO,
+								CBOARD_TITLE,
+								CBOARD_CONTENT,
+								CBOARD_VIEWCNT,
+								CBOARD_DATE,
+								USER_NO,
+								CBOARD_DELETE_CHK,
+								COMM_BIG,
+								COMM_MID,
+								COMM_BIG2,
+								COMM_MID2,
+								COMM_UPDATE_DATE)
+		VALUES (SEQ_BOARD_COMM.NEXTVAL, #{cboard_title}, #{cboard_content}, 0, sysdate, #{user_no}, 0, 200, 10, 0, 0, sysdate)
+	</insert>
+
+</mapper>

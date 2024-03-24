@@ -1,0 +1,37 @@
+.callender-head {
+  margin-bottom: 10px;
+}
+.fc-toolbar-title {
+  font-size: 20px !important;
+  font-family: "NanumSquare", sans-serif;
+  font-weight: 700;
+}
+.fc .fc-toolbar.fc-header-toolbar {
+  margin-bottom: 0.5rem !important;
+}
+.fc .fc-col-header-cell-cushion {
+  font-family: "Nunito", sans-serif;
+}
+.fc .fc-daygrid-day-number {
+  color: black;
+  opacity: 0.5;
+}
+.fc-daygrid-block-event .fc-event-time,
+.fc-daygrid-block-event .fc-event-title {
+  font-family: "NanumSquare", sans-serif;
+}
+.fc-col-header-cell-cushion {
+  color: black;
+}
+[aria-label="Sunday"] {
+  color: rgba(255, 106, 106, 0.835);
+}
+[aria-label="Saturday"] {
+  color: rgba(106, 114, 255, 0.835);
+}
+#fc-dom-1 {
+  text-indent: 15px;
+}
+.fc-prev-button {
+  margin-right: 2px !important;
+}

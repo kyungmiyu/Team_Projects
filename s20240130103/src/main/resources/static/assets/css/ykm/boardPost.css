@@ -1,0 +1,424 @@
+@import
+	url('https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css')
+	;
+/*--------------------------------------------------------------
+# community-post
+--------------------------------------------------------------*/
+
+.main * {
+	font-family: 'NanumSquare', sans-serif;
+}
+.card-body {
+	border: none;
+	box-shadow: 0px 0 30px rgba(1, 41, 112, 0.1);
+}
+
+.sider-header {
+	display: flex;
+	align-items: center;
+}
+
+/*--------------------------------------------------------------
+# 게시글 헤더
+--------------------------------------------------------------*/
+
+.post-title {
+	flex: 1;
+}
+
+.sider_right {
+	margin: 11px;
+	margin-left: auto;
+	position: relative;
+}
+
+.tooltip {
+	left: auto;
+    right: 0;
+    display: none;
+    position: absolute;
+    padding: 7px 12px;
+    border-radius: 5px;
+    background-color: #212529;
+    color: #fff;
+    font-size: 13px;
+    line-height: 1.38;
+    letter-spacing: -.3px;
+    white-space: nowrap;
+    z-index: 1; 
+    opacity: initial;
+}
+
+.sider_right:hover .tooltip {
+    display: block;
+}
+
+.recruitBtn {
+    height: 50px;
+    width: 84px;
+    align-items: center;
+    font-size: 14px;
+    padding: 11px;
+    box-shadow: 0 3px 8px 0 rgba(33,37,41,.05);
+    color: #ced4da;
+    border-color: #ced4da;
+    background-color: #fff;
+    cursor: default;
+    pointer-events: unset;
+    border-radius: 8px;
+    border-image-slice: 100%;
+    margin-left: auto;
+    letter-spacing: -0.3px;
+    display: disable;
+}
+/*--------------------------------------------------------------
+# file
+--------------------------------------------------------------*/
+.table-file {
+	margin-bottom: 10px;
+}
+.community-post-body {
+	min-height: 350px;
+}
+
+.post-header .btn-container {
+	position: relative;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	padding: 0.3rem 0.5rem;
+	width: 100%;
+	max-width: 200px;
+}
+
+.post-header .btn-container:hover button, .post-header .btn-container:hover i
+	{
+	color: #212121;
+}
+
+
+/*--------------------------------------------------------------
+# 게시판 페이지 본문
+--------------------------------------------------------------*/
+.community-post-header {
+	align-items: center;
+	position: relative;
+	flex-grow: 1;
+	background-color: #fff !important;
+}
+.card-title-header {
+	display: flex;
+	flex-direction: column;
+}
+
+.post-user-container {
+	display: flex;
+	align-items: center;
+	padding: 0.3rem 0.5rem;
+	margin-top: 0px;
+	padding-left: 0px;
+}
+
+.post-user-name {
+	margin-bottom: 0px;
+}
+
+.post-user-profile {
+	margin-right: 16px;
+	font-size: 2em;
+}
+
+.post-updated-at {
+	margin-bottom: 0px;
+}
+
+.post-subtitle {
+	display: flex;
+	position: relative;
+	justify-content: space-between;
+	align-items: center;
+	flex-direction: row;
+	color: #757575;
+	font-size: 13px;
+	margin-left: 10px;
+	margin: 0;
+}
+
+.post-veiw-count {
+	margin-left: 10px;
+	margin-bottom: 0px;
+}
+
+.modify-delete-container {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	margin-left: auto;
+	font-size: 1.2rem;
+	
+}
+.modify-delete-container button {
+	border: none;
+	margin-left: 10px;
+}
+.comment-body input[type="text"][disabled] {
+	background-color: #f8f9fa;
+	border: none;
+}
+.comment-body button[type="button"][disabled] {
+	background-color: #f8f9fa;
+	border: none;
+	color: #f8f9fa;
+}
+.comment-header .comment-body {
+	align-items: center;
+	justify-content: center;
+	display: flex;
+}
+.comment-body button {
+	color: black;
+	border: none;
+	background-color: #f8f9fa;
+	min-width: 65px;
+}
+
+.comment-form {
+	font-size: 18px;
+	font-weight: bold;
+}
+
+.rounded-circle {
+	height: 36px; 
+	width: 36px;
+}
+
+/*--------------------------------------------------------------
+# community-post-body
+--------------------------------------------------------------*/
+
+.community-post-body {
+	font-size: 16px;
+	padding: 16px;
+	min-height: 200px;
+}
+.community-post-answer {
+	padding: 16px;
+	border-top: 1px solid #f1f3f5;
+	border-bottom: 1px solid #f1f3f5;
+	background-color: #f8f9fa;
+}
+.reply-form {
+	height: 27px;
+	letter-spacing: -.3px;
+	color: #495057;
+	font-size: 16px;
+	font-weight: 700;
+}
+
+.comment-editor {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-direction: row;
+}
+
+.comment-user-profile {
+	margin-left: 10px;
+	font-size: 2em;
+}
+
+.btn-container {
+	display: flex;
+	align-items: center;
+	flex-direction: row;
+	justify-content: flex-end;
+	margin-left: 16px;
+	margin-right: 16px;
+}
+
+.form-control {
+	margin-top: 8px;
+	margin-bottom: 8px;
+	margin-left: 16px;
+	margin-right: 16px;
+	min-height: calc(2em + 1rem + 2px);
+}
+
+#commentSubmitBtn {
+	margin-left: 10px;
+}
+
+.modify-container * {
+	border: none;
+
+}
+#check {
+	background: #f8f9fa;
+	font-size: 14px;
+	
+} 
+/*--------------------------------------------------------------
+# comment
+--------------------------------------------------------------*/
+.comment-body {
+	padding: 16px;
+	background-color: #f8f9fa;
+	margin-bottom: 0px;
+}
+.comment-body p {
+	margin-bottom: 0px;
+}
+
+.comment-card {
+	padding: 16px;
+	background-color: #f8f9fa;
+	border-bottom: 1px solid #f1f3f5;
+}
+
+.comment-header {
+	background-color: #f8f9fa;
+	display: flex;
+	align-items: center;
+	flex-direction: row;
+}
+
+.comment-user-profile {
+	margin-left: 10px;
+	font-size: 2em;
+	margin-right: 16px;
+}
+
+.comment-user-name {
+	margin-bottom: 5px;
+}
+
+.comment-updated-at {
+	font-size: 13px;
+}
+
+#commentContainer {	
+ 	padding-right: 0px;
+    padding-left: 0px;
+}
+
+.btnContainer {
+	justify-content: flex-end !important;
+	align-items: center !important;
+	cursor: pointer;
+	margin-left: auto;
+	font-size: 16px;
+}
+.btnContainer button {
+	border: none;
+}
+/*--------------------------------------------------------------
+# 
+--------------------------------------------------------------*/
+.comment-user-profile {
+	margin-right: 10px;
+	font-size: 2em;
+}
+
+.replyBtn {
+	font-size: 1rem;	
+}
+.comment-user-container {
+	margin-left: 16px;
+}
+/*--------------------------------------------------------------
+# reply 대댓글
+--------------------------------------------------------------*/
+.reply-editor {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-direction: row;
+}
+.replyBox {
+	align-items: center;
+	padding: 8px 32px 8px 32px;
+}
+.replyBtnContainer {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	cursor: pointer;
+	margin-left: auto;
+	margin-right: 16px;
+	font-size: 14px;
+}
+
+.replyBtnContainer button {
+	width: 50px;
+	height: 40px;
+	border: none;
+	margin-left: 10px;
+	background-color: #f8f9fa;
+}
+.replyBtnContainer button:hover {
+	background-color: #f0f0f0;
+	border-radius: 10px;
+}
+
+.groupBy {
+	background-color: #f8f9fa;
+}
+
+
+/*--------------------------------------------------------------
+# 삭제 확인 팝업
+--------------------------------------------------------------*/
+
+.confirmPopup {
+	display: none;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 9999;
+	font-family: 'NanumSquare', sans-serif;
+	padding: 1rem;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	width: 420px;
+	height: 300px;
+	border-radius: 5px;
+	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
+
+.popup-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.popup1, .popup2 {
+	font-size: 20px;
+	font-weight: bold;
+	color: #424242;
+	padding: 0.5rem;
+}
+
+.popup-icon {
+	font-size: 3rem;
+	color: #ffc107;
+}
+
+.popup2 {
+	padding-bottom: 16px;
+}
+
+.confirmPopup::before {
+	display: flex;
+}
+
+.confirm-deletion {
+	display: block; 
+	justify-content: center;
+	align-items: center;
+}

@@ -1,0 +1,78 @@
+@charset "UTF-8";
+
+@import url('https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css');
+
+
+/*--------------------------------------------------------------
+# section
+--------------------------------------------------------------*/
+/* Card */
+.card {
+	margin: 0 auto;
+    margin-bottom: 10px;
+    width: 60%;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0px 0 30px rgba(1, 41, 112, 0.1);
+}
+
+.card-body {
+	padding: 20px 20px 20px 20px;
+}
+
+.card-title {
+	font-size: 18px;
+	font-weight: 800;
+	color: #486ef3;
+	font-family:'NanumSquare', sans-serif;
+}
+
+.eval-group .eval-group-box {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+}
+
+.eval-box {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	height: 80px;
+	width: 49.5%;
+	margin-bottom: 10px;
+	background-color: #486ef3;
+	padding: 20px 20px 20px 20px;
+	border-radius: 5px;
+    box-shadow: 0px 0 10px rgba(1, 41, 112, 0.1);
+}
+
+.eval-box p {
+	width: 60%;
+	margin-bottom: 0;
+	font-family: 'NanumSquare', sans-serif;
+}
+
+.user-img-name {
+	display: flex;
+	align-items: center;
+}
+
+.user-img-name img {
+	width: 40px;
+	height: 40px;
+	margin-right: 10px;
+}
+
+.user-img-name .user-name {
+	font-weight: 700;
+	color: white;
+}
+
+.eval-box .form-select {
+	width: 42%;
+}
+
+.submit-cancle-btn {
+	font-family: 'NanumSquare', sans-serif;
+	text-align: center;
+}

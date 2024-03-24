@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blackberry.s20240130103.UserProjectMapper">
+					
+	<select id="kphIsUserInProject" parameterType="KphUser_Project" resultType="int">
+		SELECT COUNT(PROJECT_NO)
+		FROM USER_PROJECT_MANY
+		WHERE PROJECT_NO = #{project_no}
+			AND USER_NO = #{user_no}
+			AND PROJECT_NO IN (SELECT PROJECT_NO 
+											FROM PROJECT p 
+					  						WHERE PROJECT_NO = #{project_no} 
+												AND PROJECT_DELETE_CHK = 0)
+			
+	</select>
+	
+	<insert id="kphProjectMemberAdd" parameterType="KphUser_Project">
+		INSERT INTO USER_PROJECT_MANY
+		VALUES (#{project_no}, #{user_no}, 100, 20)
+	</insert>
+	
+	<delete id="kphProjectMemberDelete" parameterType="KphUser_Project">
+		DELETE FROM USER_PROJECT_MANY
+		WHERE PROJECT_NO = #{project_no}
+			AND USER_NO = #{user_no}
+	</delete>
+
+</mapper>

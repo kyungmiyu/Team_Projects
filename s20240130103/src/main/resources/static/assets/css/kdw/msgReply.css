@@ -1,0 +1,380 @@
+@charset "UTF-8";
+
+@import url('https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css');
+
+body {
+    font-family: 'NanumSquare', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-shadow: 0 5px 20px 0 rgba(82, 63, 105, 0.2);
+}
+
+/* Card */
+.card {
+    width: 100%;
+    min-width: 800px;
+    height: 750px;
+    min-height: 500px;
+    margin-bottom: 0;
+    box-shadow: 0px 0 30px rgba(1, 41, 112, 0.1);
+    border: none;
+    border-radius: 5px;
+    padding: 25px 20px;
+}
+
+/* 안쪽 섹션 */
+.reply-section {
+    width: 100%;
+    height: 800px;
+    min-width: 800px;
+    min-height: 500px;
+    border-radius: 5px;
+    position: relative;
+}
+
+/* 보내기 버튼 */
+.reply-section .msg-Sent-Btn {
+	position: absolute;
+	margin-top:-10px;
+    width: 100px;
+    height: 35px;
+    border: 1px solid #0D6DFD;
+    border-radius: 5px;
+    color: #0D6DFD;
+    font-size: 16px;
+    font-weight: 800;
+    text-align: center;
+    line-height: 2;
+    z-index: 3;
+    background-color: transparent;
+}
+
+.reply-section .msg-Sent-Btn:active, .reply-section .msg-Sent-Btn:hover {
+    background-color: #0D6DFD; 
+    color: #ffffff; 
+    border: #0D6DFD;
+    line-height: 2.2;
+}
+
+/* 취소 버튼 */
+.reply-section .msg-cancel-btn {
+    position: absolute;
+    bottom: -10px;
+    right: 0px;
+    width: 100px;
+    height: 35px;
+    border: 1px solid #0D6DFD;
+    border-radius: 5px;
+    color: #0D6DFD;
+    font-size: 16px;
+    font-weight: 800;
+    text-align: center;
+    line-height: 2;
+    z-index: 3;
+}
+
+
+.reply-section .msg-cancel-btn:active, .reply-section .msg-cancel-btn:hover {
+    background-color: #0D6DFD; 
+    color: #ffffff; 
+    border: #0D6DFD;
+    line-height: 2.2;
+}
+/* ========= 받는사람 ========= */
+
+.input-group {
+	position: absolute;
+	width: 100%;
+	margin-top: 30px;
+}
+/* 인풋창 앞에 텍스트 "받는사람:" */
+.input-group-prepend-received .input-group-text {
+	font-weight: 700;
+	border:none;
+	background-color:transparent;
+	text-align: left;
+}
+
+/* 받는사람 인풋창 */
+.input-group .form-control {
+    border: none; /* 기존의 보더 제거 */
+    border-bottom: 1px solid #ced4da; /* 하단에만 선 추가 */
+    margin-left: -13px;
+}
+
+.input-group .form-control:focus {
+	outline: none; /* 클릭 시 나타나는 기본 테두리 제거 */
+    box-shadow: none; /* 클릭 시 나타나는 그림자 제거 */
+}
+/* 드롭다운 토글 버튼 */
+.reply-section #toggleButton,
+.reply-section #toggleButton:focus,
+.reply-section #toggleButton:hover {
+    border: none; /* 보더 제거 */
+    color: #546270; /* 텍스트 컬러 변경 */
+    background-color: transparent; /* 배경을 투명하게 만듦 */
+}
+#toggleButton {
+    position: absolute;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.arrow {
+	position:absolute;
+    font-size: 16px; /* 화살표 크기 조절 */
+    color: gray; /* 화살표의 호버 색상 */
+    z-index: 9999;
+    margin-left: -20px;
+    transform: rotate(90deg);
+    margin-top: -10px;
+}
+
+
+#toggleButton.clicked .arrow {
+    transform: rotate(180deg); /* 화살표 회전 */
+}
+
+#toggleButton:hover .arrow {
+    color: gray; /* 화살표의 호버 색상 */
+}
+
+#toggleButton.clicked .arrow {
+    transform: rotate(-90deg); /* 화살표 회전 */
+}
+
+/* 드롭다운 리스트 스타일 */
+.reply-section #userListDropdown {
+    position: absolute ;
+    border: 1px solid #ced4da;
+    width: 300px ;
+    height: 200px ;
+    min-width: 300px ;
+    min-height: 150px ;
+    left: 80px ;
+    margin-top: 38px ;
+    overflow-y: auto; /* 수직 스크롤 추가 */
+    overflow-x: auto;
+}
+
+.reply-section #toggleButton .visually-hidden {
+	border: 1px solid #ced4da;
+}
+
+/* 드랍다운 기존 보더 제거*/
+.reply-section #toggleButton {
+	height: 35px;
+}
+
+.reply-section #toggleButton{
+	border-radius: 5px;
+}
+
+/* 주소록 버튼 */
+.reply-section .input-group .receiver-addressBtn .btn.btn-outline-secondary {
+    border: 1px solid #ced4da;
+    z-index: 110;
+}
+/* 인풋창 키 입력 커스텀 알림 */
+.custom-alert {
+    position: fixed;
+    bottom: 20px;
+    right: 30px;
+    background-color: #626262;
+    color: white;
+    padding: 15px;
+    border-radius: 7px !important;
+    opacity: 0;
+    transition: opacity 1.0s ease-in-out;
+    font-size: 14px;
+    font-weight: 700;
+    z-index: 101;
+}
+
+/* ========= 받는사람 END ========= */
+
+
+/* ========= 제목 ========= */
+
+.subject-group {
+    position: absolute;
+    width: 100%; /* 부모의 100% 너비를 사용 */
+    display: flex; /* 플렉스 컨테이너로 설정하여 자식 요소를 가로로 배치 */
+    align-items: center; /* 수직 가운데 정렬 */
+    margin-top: 80px;
+}
+
+/* 인풋창 앞에 텍스트 "제목:" */
+.subject-group .subject-group-prepend {
+    width: 95px;
+    height: 35px;
+    font-weight: 700;
+    border: none;
+    border-radius: 5px;
+   	padding-left: 12px; /* 왼쪽 패딩 추가 */
+    line-height: 2;
+}
+/* 제목 인풋 창 */
+.subject-group .form-control {
+    border: none;
+    border-bottom: 1px solid #ced4da;
+    margin-left: -13px;
+    border-radius: 0px !important; 
+}
+
+.subject-group .form-control:focus {
+    outline: none; /* 클릭 시 나타나는 기본 테두리 제거 */
+    box-shadow: none; /* 클릭 시 나타나는 그림자 제거 */
+    padding-left: 15px;
+}
+
+/* ========= 제목 END ========= */
+
+
+
+/* ========= 첨부파일 ========= */
+/* 해당 스타일들 안먹는중 파일 속성이 강해서 그런듯 파일 첨부 끌어오기 검색해서 해볼것*/
+.mb-3 {
+    position: absolute;
+    width: 100%;
+    margin-top: 130px;
+}
+
+.file-form-control {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.file-form-control .btn {
+    margin-right: 0px;
+}
+
+#fileCount {
+    flex-grow: 1;
+    border: 1px solid #ced4da;
+    /* 다른 스타일 규칙들 */
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    /* 우측 모서리에는 둥근 모서리를 주지 않음 */
+    border-top-right-radius: 7px;
+    border-bottom-right-radius: 7px;
+    padding: 10px 15px;
+    color: #626262;
+    
+}
+.file_drag {
+    border: 2px dashed #cccccc;
+    border-radius: 7px;
+    max-height: 120px;
+    min-height: 120px;
+    text-align: center;
+    transition: background-color 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.file_drag.over {
+    background-color: #e8e8e8;
+}
+
+.file-list-bar {
+    width: 100%;
+    padding: 5px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f9f9f9;
+    border-bottom: 1px solid #dddddd;
+    height: 30px;
+}
+
+.file-list-item {
+	display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    background: #ffffff;
+    margin-left: -22px;
+}
+
+.delete-file {
+    color: #ff0000;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.file-name {
+    flex-grow: 1;
+    margin-right: 10px; /* Ensure there's space between the file name and size */
+}
+
+.file-size {
+    white-space: nowrap;
+}
+
+#initial_message {
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn.fileBtn{
+    background-color: white;
+    color: #626262;
+    border: 1px solid #ced4da;
+    padding: 10px 15px;
+    font-size: 16px;
+    /* 다른 스타일 규칙들 */
+    border-top-left-radius: 7px;
+    border-bottom-left-radius: 7px;
+    /* 우측 모서리에는 둥근 모서리를 주지 않음 */
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    cursor: pointer;
+    font-weight: 700;
+    border-right: none;
+}
+
+.btn.fileBtn:hover {
+    background-color: #6c757d;
+    color: white;
+}
+
+#sendButton {
+    margin-top: 10px;
+}
+/* ========= 첨부파일 END ========= */
+
+
+
+/* ========= 내용 ========= */
+/* 텍스트 영역 스타일 */
+.form-group .content-group {
+    position: absolute; /* 절대 위치로 설정 */
+    top: 330px; /* 위로 50px 이동 */
+    left: 0; /* 왼쪽에 위치하도록 설정 */
+    width: 100%;
+}
+
+.form-group .content-group .content-group-text {
+	font-size:16px;
+	font-weight: 700;
+	margin-left: 15px;
+}
+.form-group .content-group textarea {
+    width: 100%;
+    height: 300px;
+    padding: 8px; /* 내부 간격 설정 */
+    border: 1px solid #ced4da; /* 테두리 스타일 설정 */
+    border-radius: 7px; /* 테두리의 모서리를 둥글게 설정 */
+    resize: none; /* 리사이즈 비활성화 */
+    margin-top: 3px;
+}
+/* ========= 내용 END ========= */

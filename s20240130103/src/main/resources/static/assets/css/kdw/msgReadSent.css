@@ -1,0 +1,231 @@
+@charset "UTF-8";
+
+@import url('https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css');
+
+body {
+    font-family: 'NanumSquare', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-shadow: 0 5px 20px 0 rgba(82, 63, 105, 0.2);
+}
+
+/* Card */
+.card {
+    width: 100%;
+    min-width: 700px;
+    height: 750px;
+    min-height: 500px;
+    margin-bottom: 0;
+    box-shadow: 0px 0 30px rgba(1, 41, 112, 0.1);
+    border: none;
+    border-radius: 5px;
+    padding: 25px 20px;
+}
+
+/* Section */
+.read-message-section {
+    width: 100%;
+    height: 750px;
+    min-width: 800px;
+    min-height: 500px;
+    position: relative;
+}
+
+/* 답장 하기 Button */
+#readMessage-form .msgWrite-btn {
+    position: absolute;
+    margin-top: -50px;
+    margin-right: 10px;
+    padding: 10px 20px;
+    width: 110px;
+    height: 35px;
+    border: 1px solid #0D6DFD;
+    border-radius: 5px;
+    color: #0D6DFD;
+    font-size: 16px;
+    font-weight: 800;
+    text-align: center;
+    line-height: 0.9;
+    z-index: 3;
+    cursor: pointer;
+}
+
+#readMessage-form .msgWrite-btn:hover {
+	background-color: #0D6DFD;
+    color: #ffffff;
+    border: 1px solid #0D6DFD;
+}
+
+/* 취소 Button */
+#readMessage-form .cancel-btn {
+    position: absolute;
+    bottom: -8px;
+    right: 0px;
+    width: 100px;
+    height: 35px;
+    border: 1px solid #0D6DFD;
+    border-radius: 5px;
+    color: #0D6DFD;
+    font-size: 16px;
+    font-weight: 800;
+    text-align: center;
+    line-height: 2.2;
+    z-index: 3;
+    cursor: pointer;
+}
+
+#readMessage-form .cancel-btn:hover {
+	background-color: #0D6DFD;
+    color: #ffffff;
+    border: 1px solid #0D6DFD;
+}
+
+/* 제목 */
+.message-title-group {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    margin-top: 45px;
+}
+
+.message-title-group .message-title-prepend {
+    width: 95px;
+    height: 35px;
+    font-size: 18;
+    font-weight: 900;
+    border: none;
+    border-radius: 5px;
+    padding-left: 12px;
+    line-height: 2;
+}
+
+.message-title-group .message-info {
+    border: none;
+    margin-left: -13px;
+    font-size: 18;
+    font-weight: 900;
+    padding-left: 25px;
+}
+
+/* Info Group Style */
+.message-info-group {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    margin-top: 15px;
+    margin-bottom: -16px;
+    font-size: 14px;
+}
+
+/* 보낸사람 & 받은사람 */
+.message-info-group .message-info-prepend {
+    width: 95px;
+    height: 35px;
+    font-weight: 800;
+    border: none;
+    border-radius: 5px;
+    padding-left: 12px;
+    line-height: 2;
+}
+
+/* 보낸사람 받는사람 가져온 값 스타일 */
+.message-info-group .message-info {
+	margin-top: -5px;
+    border: none;
+    border-radius: 15px;
+    margin-left: -13px;
+    background-color: #e5f1fc;
+    padding: 3px 10px;
+}
+
+.time-group {
+	margin-top: 20px;
+}
+
+.time-form-group {
+	margin-top : -30px;
+}
+
+/* 읽은시간 받은시간 앞쪽 텍스트 */
+.message-info-group .message-time-info-prepend {
+	margin-top: 12px;
+	width: 95px;
+    height: 35px;
+    font-size: 12px;
+    font-weight: 800;
+    border: none;
+    border-radius: 5px;
+    color: #767678;
+    padding-left: 12px;
+    line-height: 2;
+}
+
+/* 읽은시간 받은시간 가져온 값 */
+.message-info-group .message-time-info {
+	font-size: 12px;
+	border: none;
+    border-bottom: 1px solid #ced4da;
+    margin-left: -13px;
+    color: #767678;
+}
+.message-info-group .message-time-info:focus {
+    outline: none;
+    box-shadow: none;
+    padding-left: 15px;
+}
+
+/* File Attachment Style */
+.mb-3 {
+    width: 100%;
+    margin-top: 20px;
+    border: 1px solid #ced4da;
+    border-radius: 7px;
+    min-height: 125px; /* 최소 높이값 설정 */
+    max-height: 125px; /* 최대 높이값 설정 (필요시 조정) */
+    overflow-y: auto; /* 내용이 최소 높이를 초과할 때 수직 스크롤 생성 */
+    padding: 8px;
+    white-space: nowrap; /* 텍스트 줄 바꿈 방지 */
+    text-overflow: ellipsis; /* 넘치는 텍스트에 말줄임표 추가 */
+    
+    }
+
+.file-attachment {
+    display: flex;
+    align-items: center;
+	}
+	
+/* 첨부파일 앞에 파일 아이콘 */
+.file_icon {
+    width: 26px; /* 아이콘의 너비 */
+    height: 30px; /* 아이콘의 높이 */
+    vertical-align: middle; /* 수직 정렬 */
+}
+
+.file-links {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.file-link {
+    flex: 0 0 calc(33.33% - 20px); /* 가로로 3개씩 나열 */
+    margin-right: 20px; /* 각 링크 사이의 간격 조절 */
+    margin-bottom: 10px; /* 다음 줄과의 간격 조절 */
+    text-decoration: none; /* 밑줄 제거 */
+    overflow: hidden; /* 넘치는 텍스트 숨기기 */
+    white-space: nowrap; /* 텍스트 줄 바꿈 방지 */
+    text-overflow: ellipsis; /* 넘치는 텍스트에 말줄임표 추가 */
+}
+
+/* Content Group Style */
+.form-group .content-group {
+    width: 100%;
+    height: 280px;
+    margin-top: 20px;
+    padding: 8px;
+    border: 1px solid #ced4da;
+    border-radius: 7px;
+    resize: none;
+}
+.content-group p {
+	white-space: pre-wrap;
+}

@@ -1,0 +1,629 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blackberry.s20240130103.MessageMapper">
+
+	<!-- ================ 전체 유저 리스트 가져오기 ================= -->
+	<select id="kdwGetAllUsers"
+		resultType="com.blackberry.s20240130103.lhs.model.User">
+		SELECT * FROM users
+	</select>
+
+	<!-- =========== 각 쪽지함 쪽지 개수 가져오기 ========== -->
+	<!-- 받은 쪽지 개수 -->
+	<select id="totReceiveMsgCnt" resultType="int"
+		parameterType="java.lang.Long">
+		SELECT COUNT(*) FROM message
+		WHERE msg_receiver = #{msgReceiver}
+		AND msg_store_chk = 0
+		AND msg_delete_chk = 0
+	</select>
+	<!-- 받은 쪽지중 읽지 않은 쪽지 개수 -->
+	<select id="totUnreadReceiveMsgCnt" resultType="int" parameterType="java.lang.Long">
+	    SELECT COUNT(*) FROM message
+	    WHERE msg_receiver = #{msgReceiver}
+	    AND msg_store_chk = 0
+	    AND msg_delete_chk = 0
+	    AND msg_readdate IS NULL
+	</select>
+	
+	<!-- 보낸 쪽지 개수 -->
+	<select id="totSentMsgCnt" resultType="int"
+		parameterType="java.lang.Long">
+		SELECT COUNT(*) FROM message
+		WHERE msg_sender = #{msgSender}
+		AND msg_store_chk = 0
+		AND msg_delete_chk = 0
+	</select>
+	<!-- 받은 쪽지중 읽지 않은 쪽지 개수 -->
+	<select id="totUnreadSentMsgCnt" resultType="int" parameterType="java.lang.Long">
+	    SELECT COUNT(*) FROM message
+	    WHERE msg_sender = #{msgSender}
+	    AND msg_store_chk = 0
+	    AND msg_delete_chk = 0
+	    AND msg_readdate IS NULL
+	</select>
+	
+	<!-- 쪽지보관함 개수 -->
+	<select id="totStoredMsgCnt" resultType="int"
+		parameterType="java.lang.Long">
+		SELECT COUNT(*) FROM message
+		WHERE (msg_receiver = #{storeboxUserNo} 
+		   OR msg_sender = #{storeboxUserNo})
+		AND msg_store_chk = 1
+		AND msg_delete_chk = 0
+	</select>
+	<select id="totUnreadStoredMsgCnt" resultType="int" parameterType="java.lang.Long">
+	    SELECT COUNT(*) FROM message
+		WHERE (msg_receiver = #{storeboxUserNo} 
+		   OR msg_sender = #{storeboxUserNo})
+	    AND msg_store_chk = 1
+	    AND msg_delete_chk = 0
+	    AND msg_readdate IS NULL
+	</select>
+	
+	<!-- 휴지통 개수 -->
+	<select id="totTrashMsgCnt" resultType="int"
+		parameterType="java.lang.Long">
+		SELECT COUNT(*) FROM message
+		WHERE (msg_receiver =
+		#{trashboxUserNo} OR msg_sender = #{trashboxUserNo})
+		AND msg_delete_chk = 1
+	</select>
+	<select id="totUnreadTrashMsgCnt" resultType="int" parameterType="java.lang.Long">
+	    SELECT COUNT(*) FROM message
+		WHERE (msg_receiver = #{trashboxUserNo} 
+		   OR msg_sender = #{trashboxUserNo})
+	    AND msg_delete_chk = 1
+	    AND msg_readdate IS NULL
+	</select>
+
+
+	<!-- =========== 각 쪽지함 리스트 가져오기 ========== -->
+	<!-- 받은 쪽지 리스트 가져오기 -->
+	<select id="kdwReceivedMessagesAll" parameterType="KdwMessage"
+		resultType="KdwMessage">
+		SELECT *
+		FROM (
+		    SELECT a.*, ROWNUM AS rn
+		    FROM (
+		        SELECT m.*, u.user_nic AS senderNic,
+		            (SELECT mf.msg_file_name
+		             FROM message_file mf
+		             WHERE mf.msg_no = m.msg_no
+		             AND ROWNUM = 1) AS first_file_name 
+		        FROM message m, users u
+		        WHERE m.msg_sender = u.user_no
+		        AND m.msg_receiver = #{msgReceiver}
+		        AND m.msg_delete_chk = 0
+		        AND m.msg_store_chk = 0
+		        ORDER BY m.msg_no DESC
+		    ) a
+		)
+		WHERE rn BETWEEN #{start} AND #{end}
+	</select>
+	<!-- 보낸 쪽지 리스트 가져오기 -->
+	<select id="kdwSentMessagesAll" parameterType="KdwMessage"
+		resultType="KdwMessage">
+		SELECT *
+		FROM (
+		    SELECT a.*, ROWNUM AS rn
+		    FROM (
+		        SELECT m.*, u.user_nic AS receiverNic,
+		            (SELECT mf.msg_file_name
+		             FROM message_file mf
+		             WHERE mf.msg_no = m.msg_no
+		             AND ROWNUM = 1) AS first_file_name 
+		        FROM message m, users u
+		        WHERE m.msg_receiver = u.user_no
+		        AND m.msg_sender = #{msgSender}
+		        AND m.msg_delete_chk = 0
+		        AND m.msg_store_chk = 0
+		        ORDER BY m.msg_no DESC
+		    ) a
+		)
+		WHERE rn BETWEEN #{start} AND #{end}
+	</select>
+	<!-- 쪽지 보관함 리스트 가져오기 -->
+	<select id="kdwStoredMessagesAll" parameterType="KdwMessage" resultType="KdwMessage">
+		SELECT *
+		FROM (
+		    SELECT a.*, ROWNUM AS rn
+		    FROM (
+		        SELECT m.*,
+		            CASE 
+		                WHEN m.msg_sender = #{storeboxUserNo} THEN 
+		                    (SELECT u.user_nic FROM users u WHERE u.user_no = m.msg_receiver)
+		                ELSE 
+		                    (SELECT u.user_nic FROM users u WHERE u.user_no = m.msg_sender)
+		            END AS storedNic,
+		            (SELECT mf.msg_file_name 
+		             FROM message_file mf 
+		             WHERE mf.msg_no = m.msg_no 
+		             AND ROWNUM = 1) AS first_file_name
+		        FROM message m
+		        WHERE (m.msg_receiver = #{storeboxUserNo} OR m.msg_sender = #{storeboxUserNo})
+		        AND m.msg_delete_chk = 0
+		        AND m.msg_store_chk = 1
+		        ORDER BY m.msg_no DESC
+		    ) a
+		)
+		WHERE rn BETWEEN #{start} AND #{end}
+	</select>
+	<!-- 휴지통 리스트 가져오기 -->
+	<select id="kdwTrashMessagesAll" parameterType="KdwMessage"
+		resultType="KdwMessage">
+		SELECT *
+		FROM (
+		    SELECT a.*, ROWNUM AS rn
+		    FROM (
+		        SELECT m.*,
+		            CASE 
+		                WHEN m.msg_sender = #{trashboxUserNo} THEN 
+		                    (SELECT u.user_nic FROM users u WHERE u.user_no = m.msg_receiver)
+		                ELSE 
+		                    (SELECT u.user_nic FROM users u WHERE u.user_no = m.msg_sender)
+		            END AS trashedNic,
+		            (SELECT mf.msg_file_name 
+		             FROM message_file mf 
+		             WHERE mf.msg_no = m.msg_no 
+		             AND ROWNUM = 1) AS first_file_name
+		        FROM message m
+		        WHERE (m.msg_receiver = #{trashboxUserNo} OR m.msg_sender = #{trashboxUserNo})
+		        AND m.msg_delete_chk = 1
+		        ORDER BY m.msg_no DESC
+		    ) a
+		)
+		WHERE rn BETWEEN #{start} AND #{end}
+	</select>
+
+
+	<!-- =========== 받은쪽지 & 보낸쪽지 정보 읽기 ========== -->
+	<!-- 받은 & 보낸 쪽지 정보 -->
+	<select id="kdwGetMessageById" parameterType="java.lang.Long"
+		resultType="KdwMessage">
+		SELECT * FROM message
+		WHERE msg_no = #{msgNo}
+	</select>
+	<!-- 메시지 읽은 시간 업데이트 -->
+	<update id="kdwUpdateReadDate" parameterType="java.lang.Long">
+		UPDATE message
+		SET
+		msg_readdate = SYSTIMESTAMP
+		WHERE msg_no = #{msgNo}
+	</update>
+
+	<!-- 보관 버튼 클릭시 msg_store_chk 업데이트 -->
+	<update id="kdwUpdateMsgStoreStatus"
+		parameterType="java.util.List">
+		UPDATE message
+		SET msg_store_chk = 1
+		WHERE msg_no IN
+		<foreach collection="list" item="msgNo" open="(" separator=","
+			close=")">
+			#{msgNo}
+		</foreach>
+	</update>
+
+	<!-- 삭제 버튼 클릭시 msg_delete_chk 업데이트 -->
+	<update id="kdwUpdateMsgDeleteStatus"
+		parameterType="java.util.List">
+		UPDATE message
+		SET msg_delete_chk = 1
+		WHERE msg_no IN
+		<foreach collection="list" item="msgNo" open="(" separator=","
+			close=")">
+			#{msgNo}
+		</foreach>
+	</update>
+
+	<!-- 쪽지 영구 삭제 쿼리 구현 -->
+	<delete id="kdwPermanentDeleteMessages"
+		parameterType="java.util.List">
+		DELETE FROM message
+		WHERE msg_no IN
+		<foreach collection="list" item="msgNo" open="(" separator=","
+			close=")">
+			#{msgNo}
+		</foreach>
+	</delete>
+	<!-- 첨부파일 쪽지 삭 -->
+	<delete id="kdwDeleteMessageFilesByMsgNo" parameterType="long">
+	    DELETE FROM message_file
+	    WHERE msg_no = #{msgNo}
+	</delete>
+	
+	<!-- !! 쪽지 등록 & 파일 업로드 !! -->
+	<!-- 쪽지 등록 -->
+	<insert id="kdwSentMsg" parameterType="KdwMessage"
+		useGeneratedKeys="true" keyColumn="msg_no" keyProperty="msg_no">
+		INSERT INTO
+		message (msg_no, msg_title, msg_content, msg_createdate,
+		msg_readdate,
+		msg_sender, msg_receiver, msg_delete_chk, msg_store_chk)
+		VALUES
+		(SEQ_MSG.nextval, #{msg_title}, #{msg_content}, SYSDATE, null,
+		#{msg_sender}, #{msg_receiver}, 0, 0)
+	</insert>
+
+	<!-- 파일 등록 -->
+	<insert id="kdwSaveMessageFile" parameterType="KdwMessageFile">
+		INSERT INTO
+		message_File (msg_no, msg_file_name, msg_file_user_name,
+		msg_file_cnt)
+		VALUES (#{msg_no}, #{msg_file_name}, #{msg_file_user_name},
+		(SELECT
+		NVL(MAX(msg_file_cnt), 0) + 1
+		FROM message_File
+		WHERE msg_no = #{msg_no})
+		)
+	</insert>
+	
+	
+	<!-- !! 파일 다운로드 기능 !! -->
+    <!-- 파일첨부된 쪽지의 모든 파일 정보 가져오기 -->
+	<select id="kdwGetMessagesWithFiles" resultType="KdwMessageFile">
+	    SELECT msg_no, msg_file_cnt, msg_file_name, msg_file_user_name
+	    FROM message_file
+	    WHERE msg_no = #{msg_no}
+	</select>
+
+	<!-- 파일 상세 정보 조회 -->
+	<select id="kdwGetFileDetail" parameterType="KdwMessageFile" resultType="KdwMessageFile">
+	    SELECT msg_no, msg_file_cnt, msg_file_name, msg_file_user_name
+	    FROM message_file
+	    WHERE msg_no = #{msgNo} AND msg_file_cnt = #{fileCnt}
+	</select>
+    
+    
+    
+	<!-- !! 검색 기능 !! -->
+	<!-- ========== 받은 쪽지함 검색기능 =========== -->
+	<!-- 받은 쪽지함 검색된 리스트 조회 -->
+	<select id="kdwSearchReceivedMessages" parameterType="KdwMessage" resultType="KdwMessage">
+		SELECT *
+		FROM (
+		    SELECT a.*, ROWNUM AS rn
+		    FROM (
+		        SELECT m.*, u.user_nic AS senderNic,
+		            (SELECT mf.msg_file_name
+		             FROM message_file mf
+		             WHERE mf.msg_no = m.msg_no
+		             AND ROWNUM = 1) AS first_file_name 
+		        FROM message m, users u
+		        WHERE m.msg_sender = u.user_no
+		        AND m.msg_receiver = #{msgReceiver}
+		        AND m.msg_delete_chk = 0
+		        AND m.msg_store_chk = 0
+				AND (
+				    (#{type} = 'all' AND (
+				        u.user_nic LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'
+				        OR  m.msg_title LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'
+				        OR  m.msg_content LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'
+				    ))
+				    OR
+				    (#{type} = 'sender' AND u.user_nic LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\')
+				    OR
+				    (#{type} = 'titleContent' AND (
+				        m.msg_title LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'
+				        OR  m.msg_content LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'
+				    ))
+				)
+		        ORDER BY m.msg_no DESC
+		    ) a
+		)
+		WHERE rn BETWEEN #{start} AND #{end}
+	</select>
+	<!-- 받은 쪽지함 검색된 쪽지 수 조회 -->
+	<select id="kdwSearchReceiveMsgCnt" parameterType="map" resultType="int">
+	    SELECT COUNT(*)
+	    FROM message m, users u
+	    WHERE m.msg_sender = u.user_no
+	    AND m.msg_receiver = #{msgReceiver}
+	    AND m.msg_store_chk = 0
+	    AND m.msg_delete_chk = 0
+	    AND (
+	        (#{type} = 'all' AND (u.user_nic LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'
+	        					OR m.msg_title LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'
+	        					OR m.msg_content LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'
+	        ))
+	        OR
+	        (#{type} = 'sender' AND u.user_nic LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\')
+	        OR
+	        (#{type} = 'titleContent' AND (m.msg_title LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'
+	        							OR m.msg_content LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'))
+	    )
+	</select>
+	<!-- 받은 쪽지함 검색된 읽지않은 쪽지개수 조회 -->
+	<select id="kdwSearchUnreadReceiveMsgCnt" parameterType="map" resultType="int">
+	    SELECT COUNT(*)
+	    FROM message m, users u
+	    WHERE m.msg_sender = u.user_no
+	    AND m.msg_receiver = #{msgReceiver}
+	    AND m.msg_store_chk = 0
+	    AND m.msg_delete_chk = 0
+	    AND msg_readdate IS NULL
+	    AND (
+	        (#{type} = 'all' AND (u.user_nic LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'
+	        					OR m.msg_title LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'
+	        					OR m.msg_content LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'))
+	        OR
+	        (#{type} = 'sender' AND u.user_nic LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\')
+	        OR
+	        (#{type} = 'titleContent' AND (m.msg_title LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\' 
+	        							OR m.msg_content LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'))
+	    )
+	</select>
+	<!-- ========== 보낸 쪽지함 검색기능 =========== -->
+	<!-- 보낸 쪽지함 검색된 리스트 조회 -->
+	<select id="kdwSearchSentMessages" parameterType="KdwMessage" resultType="KdwMessage">
+		SELECT *
+		FROM (
+		    SELECT a.*, ROWNUM AS rn
+		    FROM (
+		        SELECT m.*, u.user_nic AS receiverNic,
+		            (SELECT mf.msg_file_name
+		             FROM message_file mf
+		             WHERE mf.msg_no = m.msg_no
+		             AND ROWNUM = 1) AS first_file_name 
+		        FROM message m, users u
+		        WHERE m.msg_receiver = u.user_no
+		        AND m.msg_sender = #{msgSender}
+		        AND m.msg_delete_chk = 0
+		        AND m.msg_store_chk = 0
+		        AND (
+		            (#{type} = 'all' AND (u.user_nic LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'
+		            				  OR m.msg_title LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'
+		            				  OR m.msg_content LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'))
+		            OR
+		            (#{type} = 'receiver' AND u.user_nic LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\')
+		            OR
+		            (#{type} = 'titleContent' AND (m.msg_title LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\' 
+		            						   OR  m.msg_content LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'))
+		        )
+		        ORDER BY m.msg_no DESC
+		    ) a
+		)
+		WHERE rn BETWEEN #{start} AND #{end}
+	</select>
+	<!-- 보낸 쪽지함 검색된 쪽지 수 조회 -->
+	<select id="kdwSearchSentMsgCnt" parameterType="map" resultType="int">
+		SELECT COUNT(*)
+	    FROM message m, users u
+	    WHERE m.msg_receiver = u.user_no
+	    AND msg_sender = #{msgSender}
+	    AND m.msg_store_chk = 0
+	    AND m.msg_delete_chk = 0
+	    AND (
+	        (#{type} = 'all' AND (u.user_nic LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'
+	        					OR m.msg_title LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'
+	        					OR m.msg_content LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'))
+	        OR
+	        (#{type} = 'receiver' AND u.user_nic LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\')
+	        OR
+	        (#{type} = 'titleContent' AND (m.msg_title LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'
+	        							OR m.msg_content LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'))
+	    )
+	</select>
+	<!-- 보낸 쪽지함 검색된 읽지않은 쪽지 수 조회 -->
+	<select id="kdwSearchUnreadSentMsgCnt" parameterType="map" resultType="int">
+		SELECT COUNT(*)
+	    FROM message m, users u
+	    WHERE m.msg_receiver = u.user_no
+	    AND msg_sender = #{msgSender}
+	    AND m.msg_store_chk = 0
+	    AND m.msg_delete_chk = 0
+	    AND msg_readdate IS NULL
+	    AND (
+	        (#{type} = 'all' AND (u.user_nic LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'
+	        					OR m.msg_title LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'
+	        					OR m.msg_content LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'))
+	        OR
+	        (#{type} = 'receiver' AND u.user_nic LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\')
+	        OR
+	        (#{type} = 'titleContent' AND (m.msg_title LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\' 
+	        							OR m.msg_content LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'))
+	    )
+	</select>
+	<!-- ========== 쪽지 보관함 검색기능 =========== -->
+	<!-- 쪽지 보관함 검색된 리스트 조회 -->
+	<select id="kdwSearchStoredMessages" parameterType="KdwMessage" resultType="KdwMessage">
+		SELECT *
+		FROM (
+		    SELECT a.*, ROWNUM AS rn
+		    FROM (
+		        SELECT m.*,
+		            CASE 
+		                WHEN m.msg_sender = #{storeboxUserNo} THEN 
+		                    (SELECT u.user_nic FROM users u WHERE u.user_no = m.msg_receiver)
+		                ELSE 
+		                    (SELECT u.user_nic FROM users u WHERE u.user_no = m.msg_sender)
+		            END AS storedNic,
+		            (SELECT mf.msg_file_name 
+		             FROM message_file mf 
+		             WHERE mf.msg_no = m.msg_no 
+		             AND ROWNUM = 1) AS first_file_name
+		        FROM message m
+		        WHERE (m.msg_receiver = #{storeboxUserNo} OR m.msg_sender = #{storeboxUserNo})
+		        AND m.msg_delete_chk = 0
+		        AND m.msg_store_chk = 1
+		        AND (
+			         (#{type} = 'all' AND (
+			                    m.msg_title LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\' OR 
+			                    m.msg_content LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\' OR
+			                    EXISTS (SELECT 1 FROM users u WHERE u.user_no = m.msg_sender AND u.user_nic LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\') OR
+			                    EXISTS (SELECT 1 FROM users u WHERE u.user_no = m.msg_receiver AND u.user_nic LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\')
+			                ))
+			     OR
+			         (#{type} = 'sender' AND EXISTS (SELECT 1 FROM users u WHERE u.user_no = m.msg_sender AND u.user_nic LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'))
+			     OR
+			         (#{type} = 'receiver' AND EXISTS (SELECT 1 FROM users u WHERE u.user_no = m.msg_receiver AND u.user_nic LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'))
+			     OR
+			         (#{type} = 'titleContent' AND (m.msg_title LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\' 
+			         							OR m.msg_content LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'))
+			            )
+		        ORDER BY m.msg_no DESC
+		    ) a
+		)
+		WHERE rn BETWEEN #{start} AND #{end}
+	</select>
+	<!-- 쪽지 보관함 검색된 쪽지 수 조회 -->
+	<select id="kdwSearchStoredMsgCnt" parameterType="map" resultType="int">
+	    SELECT COUNT(*)
+	    FROM message m
+	    WHERE (m.msg_receiver = #{storeboxUserNo} OR m.msg_sender = #{storeboxUserNo})
+	    AND m.msg_store_chk = 1
+	    AND m.msg_delete_chk = 0
+	    AND (
+	        (#{type} = 'all' AND (
+	            m.msg_title LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\' OR 
+	            m.msg_content LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\' OR
+	            EXISTS (SELECT 1 FROM users u WHERE u.user_no = m.msg_sender AND u.user_nic LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\') OR
+	            EXISTS (SELECT 1 FROM users u WHERE u.user_no = m.msg_receiver AND u.user_nic LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'
+	            )
+	        ))
+	        OR
+	        (#{type} = 'sender' AND EXISTS (SELECT 1 FROM users u WHERE u.user_no = m.msg_sender AND u.user_nic LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'))
+	        OR
+	        (#{type} = 'receiver' AND EXISTS (SELECT 1 FROM users u WHERE u.user_no = m.msg_receiver AND u.user_nic LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'))
+	        OR
+	        (#{type} = 'titleContent' AND (m.msg_title LIKE '%' || #{keyword} || '%' OR m.msg_content LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'))
+	    )
+	</select>
+	<!-- 쪽지 보관함 검색된 읽지않은 쪽지 수 조회 -->
+	<select id="kdwSearchUnreadStoredMsgCnt" parameterType="map" resultType="int">
+	    SELECT COUNT(*)
+	    FROM message m
+	    WHERE (m.msg_receiver = #{storeboxUserNo} OR m.msg_sender = #{storeboxUserNo})
+	    AND m.msg_store_chk = 1
+	    AND m.msg_delete_chk = 0
+	    AND msg_readdate IS NULL
+	    AND (
+	        (#{type} = 'all' AND (
+	            m.msg_title LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\' OR 
+	            m.msg_content LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\' OR
+	            EXISTS (SELECT 1 FROM users u WHERE u.user_no = m.msg_sender AND u.user_nic LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\') OR
+	            EXISTS (SELECT 1 FROM users u WHERE u.user_no = m.msg_receiver AND u.user_nic LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\')
+	        ))
+	        OR
+	        (#{type} = 'sender' AND EXISTS (SELECT 1 FROM users u WHERE u.user_no = m.msg_sender AND u.user_nic LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'))
+	        OR
+	        (#{type} = 'receiver' AND EXISTS (SELECT 1 FROM users u WHERE u.user_no = m.msg_receiver AND u.user_nic LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'))
+	        OR
+	        (#{type} = 'titleContent' AND (m.msg_title LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\' OR m.msg_content LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'))
+	    )
+	</select>
+	<!-- ========== 휴지통 검색기능 =========== -->
+	<!-- 휴지통 검색된 리스트 조회 -->
+	<select id="kdwSearchTrashMessages" parameterType="KdwMessage" resultType="KdwMessage">
+		SELECT *
+		FROM (
+		    SELECT a.*, ROWNUM AS rn
+		    FROM (
+		        SELECT m.*,
+		            CASE 
+		                WHEN m.msg_sender = #{trashboxUserNo} THEN 
+		                    (SELECT u.user_nic FROM users u WHERE u.user_no = m.msg_receiver)
+		                ELSE 
+		                    (SELECT u.user_nic FROM users u WHERE u.user_no = m.msg_sender)
+		            END AS trashedNic,
+		            (SELECT mf.msg_file_name 
+		             FROM message_file mf 
+		             WHERE mf.msg_no = m.msg_no 
+		             AND ROWNUM = 1) AS first_file_name
+		        FROM message m
+		        WHERE (m.msg_receiver = #{trashboxUserNo} OR m.msg_sender = #{trashboxUserNo})
+		        AND m.msg_delete_chk = 1
+		        AND (
+			        (#{type} = 'all' AND (
+			        	m.msg_title LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\' OR 
+			            m.msg_content LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\' OR
+			            EXISTS (SELECT 1 FROM users u WHERE u.user_no = m.msg_sender AND u.user_nic LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\') OR
+			            EXISTS (SELECT 1 FROM users u WHERE u.user_no = m.msg_receiver AND u.user_nic LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\')
+			                ))
+			    OR
+			        (#{type} = 'sender' AND EXISTS (SELECT 1 FROM users u WHERE u.user_no = m.msg_sender AND u.user_nic LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'))
+			    OR
+			        (#{type} = 'receiver' AND EXISTS (SELECT 1 FROM users u WHERE u.user_no = m.msg_receiver AND u.user_nic LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'))
+			    OR
+			        (#{type} = 'titleContent' AND (m.msg_title LIKE '%' || #{keyword} || '%' OR m.msg_content LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'))
+			            )
+		        ORDER BY m.msg_no DESC
+		    ) a
+		)
+		WHERE rn BETWEEN #{start} AND #{end}
+	</select>
+	<!-- 휴지통 검색된 쪽지 수 조회 -->
+	<select id="kdwSearchTrashMsgCnt" parameterType="map" resultType="int">
+	    SELECT COUNT(*)
+	    FROM message m
+	    WHERE (m.msg_receiver = #{trashboxUserNo} OR m.msg_sender = #{trashboxUserNo})
+	    AND m.msg_delete_chk = 1
+	    AND (
+	        (#{type} = 'all' AND (
+	            m.msg_title LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\' OR 
+	            m.msg_content LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\' OR
+	            EXISTS (SELECT 1 FROM users u WHERE u.user_no = m.msg_sender AND u.user_nic LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\') OR
+	            EXISTS (SELECT 1 FROM users u WHERE u.user_no = m.msg_receiver AND u.user_nic LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\')
+	        ))
+	        OR
+	        (#{type} = 'sender' AND EXISTS (SELECT 1 FROM users u WHERE u.user_no = m.msg_sender AND u.user_nic LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'))
+	        OR
+	        (#{type} = 'receiver' AND EXISTS (SELECT 1 FROM users u WHERE u.user_no = m.msg_receiver AND u.user_nic LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'))
+	        OR
+	        (#{type} = 'titleContent' AND (m.msg_title LIKE '%' || #{keyword} || '%' OR m.msg_content LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'))
+	    )
+	</select>
+	<!-- 휴지통 검색된 읽지않은 쪽지 수 조회 -->
+	<select id="kdwSearchUnreadTrashMsgCnt" parameterType="map" resultType="int">
+	    SELECT COUNT(*)
+	    FROM message m
+	    WHERE (m.msg_receiver = #{trashboxUserNo} OR m.msg_sender = #{trashboxUserNo})
+	    AND m.msg_delete_chk = 1
+	    AND msg_readdate IS NULL
+	    AND (
+	        (#{type} = 'all' AND (
+	            m.msg_title LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\' OR 
+	            m.msg_content LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\' OR
+	            EXISTS (SELECT 1 FROM users u WHERE u.user_no = m.msg_sender AND u.user_nic LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\') OR
+	            EXISTS (SELECT 1 FROM users u WHERE u.user_no = m.msg_receiver AND u.user_nic LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\')
+	        ))
+	        OR
+	        (#{type} = 'sender' AND EXISTS (SELECT 1 FROM users u WHERE u.user_no = m.msg_sender AND u.user_nic LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'))
+	        OR
+	        (#{type} = 'receiver' AND EXISTS (SELECT 1 FROM users u WHERE u.user_no = m.msg_receiver AND u.user_nic LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'))
+	        OR
+	        (#{type} = 'titleContent' AND (m.msg_title LIKE '%' || #{keyword} || '%' OR m.msg_content LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'))
+	    )
+	</select>
+	
+	<!-- 유저 넘버로 유저 닉네임, 아이디 가져오기 -->
+	<select id="kdwGetUserNicUserId" parameterType="java.lang.Long" 
+			resultType="com.blackberry.s20240130103.lhs.model.User">
+	    SELECT user_nic, user_id
+	    FROM users
+	    WHERE user_no = #{receiverId}
+	</select>
+	
+	<select id="LhsHeaderThreeMessage" parameterType="String" resultType="KdwMessage">
+		<![CDATA[
+			SELECT rownum rn, a.*
+			FROM (SELECT u.user_nic senderNic,u.USER_PROFILE,m.*
+					FROM MESSAGE m ,USERS u 
+					WHERE m.MSG_RECEIVER = #{userNo}
+					AND m.msg_sender = u.USER_NO 
+					AND m.msg_delete_chk = 0
+					AND m.MSG_READDATE IS NULL
+					ORDER BY m.MSG_CREATEDATE DESC) a
+			WHERE rownum <=3
+		]]>
+	</select>
+	
+	<select id="LhsHeaderNoReadMessageCnt" parameterType="String" resultType="int">
+		SELECT count(*)
+		FROM MESSAGE m 
+		WHERE m.MSG_RECEIVER = #{userNo}
+		AND m.msg_delete_chk = 0
+		AND m.MSG_READDATE IS NULL
+	</select>
+	
+</mapper>

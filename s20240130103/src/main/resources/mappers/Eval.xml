@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blackberry.s20240130103.EvalMapper">
+			
+	<select id="kphProjectIsEvalByUser" parameterType="KphProject" resultType="int">
+		SELECT COUNT(user_no)
+		FROM EVAL
+		WHERE PROJECT_NO = #{project_no} 
+			AND USER_NO = #{user_no}
+	</select>
+	
+	<insert id="kphEvalInsert" parameterType="KphEval">
+		INSERT INTO EVAL VALUES (#{project_no}, #{user_no}, #{puser}, #{eval_score}, sysdate)
+	</insert>
+	
+</mapper>

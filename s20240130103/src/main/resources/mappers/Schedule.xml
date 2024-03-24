@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blackberry.s20240130103.lhs.Schedule">
+	<insert id="LhsScheduleInsert" parameterType="LhsSchedule">
+		insert into
+		team_schedule
+		values (#{project_no},
+				(select nvl(max(sch_no),0) from team_schedule where project_no=#{project_no})+1,
+				#{sch_title},
+				#{sch_start},
+				#{sch_end},
+				#{user_no},
+				sysdate,
+				null)
+	</insert>
+	
+	<select id="LhsScheduleList" parameterType="LhsSchedule" resultType="LhsSchedule">
+		select t.*,u.user_name,u.user_id
+		from team_schedule t, users u
+		where t.user_no = u.user_no
+		and t.project_no = #{project_no}
+	</select>
+	
+	<delete id="LhsScheduleDelete" parameterType="LhsSchedule">
+		delete from team_schedule where project_no = #{project_no} and sch_no = #{sch_no}
+	</delete>
+	
+	<select id="LhsScheduleSelectOne" parameterType="LhsSchedule" resultType="LhsSchedule">
+		select t.*
+		from team_schedule t
+		where t.project_no = #{project_no}
+		and t.sch_no = #{sch_no}
+	</select>
+	
+	<update id="LhsScheduleUpdate" parameterType="LhsSchedule">
+		update team_schedule
+		set sch_title=#{sch_title},sch_start=#{sch_start},sch_end=#{sch_end},sch_update_date=sysdate
+		where project_no=#{project_no}
+		and sch_no=#{sch_no}
+	</update>
+</mapper>

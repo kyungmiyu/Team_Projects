@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blackberry.s20240130103.UsersMapper">
+			
+	<select id="kphUserListByProjectNoExceptOwn" parameterType="KphUser_Project" resultType="KphUsers">
+		SELECT u.USER_NO, u.USER_ID, u.USER_NAME, u.USER_NIC, u.USER_EMAIL, u.USER_PROFILE
+		FROM USERS u , (
+								SELECT USER_NO  
+								FROM USER_PROJECT_MANY 
+								WHERE PROJECT_NO = #{project_no}
+									AND USER_NO NOT IN #{user_no}
+								) upm
+		WHERE u.USER_NO = upm.USER_NO
+			AND u.USER_DELETE_CHK = 0
+	</select>
+	
+	<select id="kphAddressUserList" parameterType="Long" resultType="KphUsers">
+		SELECT u2.USER_NO, u2.USER_ID, u2.USER_NAME, u2.USER_NIC, u2.USER_EMAIL, u2.USER_PROFILE, a.USER_SCORE
+		FROM USERS u2,(SELECT u.USER_NO, NVL(AVG(e.EVAL_SCORE),0) USER_SCORE
+					            FROM USERS u,EVAL e 
+					            WHERE u.USER_NO IN (SELECT re_user_no user_no
+									                           FROM ADDRESS a
+									                           WHERE AGREE_CHK = 1
+									                           AND USER_NO = #{user_no}
+									                           UNION 
+									                           SELECT user_no user_no
+									                           FROM ADDRESS a
+									                           WHERE AGREE_CHK = 1
+									                           AND RE_USER_NO = #{user_no})
+					            AND u.USER_NO = e.PUSER(+) 
+					            GROUP BY u.USER_NO) a
+		WHERE u2.USER_NO = a.USER_NO
+			AND u2.USER_DELETE_CHK = 0
+	</select>
+	
+	<select id="kphAddressUserListByName" parameterType="KphUsers" resultType="KphUsers">
+		SELECT u2.USER_NO, u2.USER_ID, u2.USER_NAME, u2.USER_NIC, u2.USER_EMAIL, u2.USER_PROFILE, a.USER_SCORE
+		FROM USERS u2,(SELECT u.USER_NO, NVL(AVG(e.EVAL_SCORE),0) USER_SCORE
+					            FROM USERS u,EVAL e 
+					            WHERE u.USER_NO IN (SELECT re_user_no user_no
+									                           FROM ADDRESS a
+									                           WHERE AGREE_CHK = 1
+									                           AND USER_NO = #{user_no}
+									                           UNION 
+									                           SELECT user_no user_no
+									                           FROM ADDRESS a
+									                           WHERE AGREE_CHK = 1
+									                           AND RE_USER_NO = #{user_no})
+					            AND u.USER_NO = e.PUSER(+) 
+					            GROUP BY u.USER_NO) a
+		WHERE u2.USER_NO = a.USER_NO
+			AND u2.USER_DELETE_CHK = 0
+			AND u2.USER_NAME LIKE '%' || #{user_name} || '%'	
+	</select>
+	
+	<select id="kphUserListInTask" parameterType="KphTask" resultType="KphUsers">
+		SELECT u.USER_NO, u.USER_ID, u.USER_NAME, u.USER_NIC, u.USER_EMAIL, u.USER_PROFILE
+		FROM USERS u 
+		WHERE u.USER_NO IN (SELECT USER_NO 
+        						           FROM USER_TASK_MANY
+                    					 WHERE PROJECT_NO = #{project_no}
+                      						  AND TASK_NO = #{task_no})
+        	AND u.USER_DELETE_CHK = 0
+    	ORDER BY USER_NAME                  						  
+	</select>
+	
+	<select id="kphUserListByProjectNo" parameterType="Long" resultType="KphUsers">
+		SELECT u.USER_NO, u.USER_ID, u.USER_NAME, u.USER_NIC, u.USER_EMAIL, u.USER_PROFILE
+		FROM USERS u
+		WHERE u.USER_NO IN (SELECT USER_NO
+										 FROM USER_PROJECT_MANY
+										 WHERE PROJECT_NO = #{project_no})
+			AND u.USER_DELETE_CHK = 0
+		ORDER BY USER_NAME
+	</select>
+	
+	<select id="kphAddressUserListExceptProjectMember" parameterType="KphUser_Project" resultType="KphUsers">
+		SELECT u2.USER_NO, u2.USER_ID, u2.USER_NAME, u2.USER_NIC, u2.USER_EMAIL, u2.USER_PROFILE, a.USER_SCORE
+		FROM USERS u2,(SELECT u.USER_NO, NVL(AVG(e.EVAL_SCORE),0) USER_SCORE
+					            FROM USERS u,EVAL e 
+					            WHERE u.USER_NO IN (SELECT re_user_no user_no
+									                           FROM ADDRESS a
+									                           WHERE AGREE_CHK = 1
+									                           AND USER_NO = #{user_no}
+									                           UNION 
+									                           SELECT user_no user_no
+									                           FROM ADDRESS a
+									                           WHERE AGREE_CHK = 1
+									                           AND RE_USER_NO = #{user_no})
+					            AND u.USER_NO = e.PUSER(+) 
+					            GROUP BY u.USER_NO) a
+		WHERE u2.USER_NO = a.USER_NO
+			AND u2.USER_DELETE_CHK = 0
+			AND u2.USER_NO NOT IN (
+													SELECT USER_NO
+													FROM USER_PROJECT_MANY
+													WHERE PROJECT_NO = #{project_no}
+												)
+			<if test="user_name != null">
+				AND u2.USER_NAME LIKE '%' || #{user_name} || '%'
+			</if>									
+	</select>
+	
+	<select id="kphProjectMemberListIncludingIsInTask" parameterType="KphTask" resultType="KphUsers">
+		SELECT u.*, upm2.IS_USER_IN_TASK
+		FROM USERS u , (SELECT upm.PROJECT_NO , upm.USER_NO, CASE WHEN EXISTS (SELECT * 
+																												FROM USER_TASK_MANY utm 
+																												WHERE utm.PROJECT_NO = #{project_no}  
+																													AND utm.TASK_NO = #{task_no} 
+																													AND upm.USER_NO = utm.USER_NO) THEN 1 ELSE 0 END AS IS_USER_IN_TASK
+								FROM USER_PROJECT_MANY upm 
+								WHERE upm.PROJECT_NO = #{project_no}) upm2
+		WHERE u.USER_NO = upm2.USER_NO
+	</select>
+	
+</mapper>

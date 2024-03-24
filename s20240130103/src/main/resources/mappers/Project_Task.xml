@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blackberry.s20240130103.ProjectTaskMapper">
+
+	<select id="kphTotalTaskList" parameterType="KphProjectTask" resultType="KphProjectTask">
+		SELECT  *
+		FROM (SELECT ROWNUM rn, utm.*
+				  FROM (SELECT p.PROJECT_NO, t.TASK_NO, p.PROJECT_TITLE , t.TASK_TITLE , t.TASK_START , t.TASK_END
+					    	FROM USER_TASK_MANY utm , PROJECT p , TASK t 
+							WHERE utm.PROJECT_NO = p.PROJECT_NO 
+								AND utm.TASK_NO = t.TASK_NO 
+								AND t.PROJECT_NO = p.PROJECT_NO
+								AND utm.USER_NO = #{user_no}
+								AND p.PROJECT_DELETE_CHK = 0
+							<choose>
+								<when test="searchFilter=='all'">
+									AND (p.PROJECT_TITLE LIKE  '%' || #{keyword} || '%' OR t.TASK_TITLE LIKE  '%' || #{keyword} || '%')
+								</when>
+								<when test="searchFilter=='project_title'">
+									AND p.PROJECT_TITLE LIKE  '%' || #{keyword} || '%'
+								</when>
+								<when test="searchFilter=='task_title'">
+									AND t.TASK_TITLE LIKE  '%' || #{keyword} || '%'
+								</when>
+							</choose>
+							<choose>
+								<when test="clickedNav=='comp'">
+									AND t.TASK_COMP_CHK = 1
+								</when>
+								<when test="clickedNav=='uncomp'">
+									AND t.TASK_COMP_CHK = 0
+								</when>
+							</choose>
+							<choose>
+								<when test="sortFilter=='sort_project'">
+									ORDER BY p.PROJECT_TITLE
+								</when>
+								<when test="sortFilter=='sort_task'">
+									ORDER BY t.TASK_TITLE
+								</when>
+								<otherwise>
+									ORDER BY t.TASK_END
+								</otherwise>
+							</choose>
+							) utm
+					)utm2
+		WHERE utm2.rn BETWEEN #{start} AND #{end}
+	</select>
+	
+	<select id="kphTotalTaskCountByKeyword" parameterType="KphProjectTask" resultType="int">
+		SELECT COUNT(t.TASK_NO) 
+		FROM USER_TASK_MANY utm, PROJECT p , TASK t 
+		WHERE utm.PROJECT_NO = p.PROJECT_NO 
+			AND utm.TASK_NO = t.TASK_NO 
+			AND t.PROJECT_NO = p.PROJECT_NO
+			AND utm.USER_NO = #{user_no}
+			AND p.PROJECT_DELETE_CHK = 0
+			<choose>
+				<when test="searchFilter=='all'">
+					AND (p.PROJECT_TITLE LIKE  '%' || #{keyword} || '%' OR t.TASK_TITLE LIKE  '%' || #{keyword} || '%')
+				</when>
+				<when test="searchFilter=='project_title'">
+					AND p.PROJECT_TITLE LIKE  '%' || #{keyword} || '%'
+				</when>
+				<when test="searchFilter=='task_title'">
+					AND t.TASK_TITLE LIKE  '%' || #{keyword} || '%'
+				</when>
+			</choose>
+			<choose>
+				<when test="clickedNav=='comp'">
+					AND t.TASK_COMP_CHK = 1
+				</when>
+				<when test="clickedNav=='uncomp'">
+					AND t.TASK_COMP_CHK = 0
+				</when>
+			</choose>
+	</select>
+	
+</mapper>

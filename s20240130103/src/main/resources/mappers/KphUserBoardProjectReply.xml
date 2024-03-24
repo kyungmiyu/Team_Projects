@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blackberry.s20240130103.KphUserBoardProjectReplyMapper">
+					
+	<select id="KphBoardProjectReplyList" parameterType="KphUserBoardProject" resultType="KphUserBoardProjectReply">
+		SELECT *
+		FROM BOARD_PROJECT_REPLY bpr, USERS u
+		WHERE bpr.PBOARD_NO = #{pboard_no}
+			AND bpr.USER_NO = u.USER_NO 
+			AND bpr.PREPLY_NO NOT IN (
+												SELECT PREPLY_NO
+												FROM BOARD_PROJECT_REPLY bpr2 
+												WHERE bpr2.PBOARD_NO = #{pboard_no}
+													AND bpr2.PREPLY_LEVEL = 0
+													AND bpr2.PREPLY_DELETE_CHK = 1
+													AND bpr2.PREPLY_GROUP IN (
+																							SELECT PREPLY_GROUP
+																							FROM BOARD_PROJECT_REPLY bpr3 
+																							WHERE bpr3.PBOARD_NO = #{pboard_no}
+																							GROUP BY bpr3.PREPLY_GROUP
+																							HAVING COUNT(bpr3.PREPLY_NO) = 1
+																							)
+												)
+			AND bpr.PREPLY_GROUP NOT IN (SELECT bpr4.PREPLY_GROUP
+														FROM (SELECT PREPLY_GROUP, COUNT(PREPLY_NO) cnt1
+																	FROM BOARD_PROJECT_REPLY 
+																	WHERE PBOARD_NO = #{pboard_no}
+																	AND PREPLY_DELETE_CHK = 1
+																	GROUP BY PREPLY_GROUP
+																	HAVING COUNT(PREPLY_NO) > 1) bpr4,
+																	(SELECT PREPLY_GROUP, COUNT(PREPLY_NO) cnt2
+																	FROM BOARD_PROJECT_REPLY
+																	WHERE PBOARD_NO = #{pboard_no}
+																	GROUP BY PREPLY_GROUP) bpr5
+														WHERE bpr4.PREPLY_GROUP = bpr5.PREPLY_GROUP
+															AND bpr4.cnt1 = bpr5.cnt2)
+			AND bpr.PREPLY_NO NOT IN (SELECT PREPLY_NO  
+													FROM BOARD_PROJECT_REPLY 
+													WHERE PBOARD_NO = #{pboard_no}
+														AND PREPLY_LEVEL > 0
+														AND PREPLY_DELETE_CHK = 1)
+		ORDER BY PREPLY_GROUP DESC, PREPLY_LEVEL ASC
+	</select>
+	
+	<select id="KphUserBoardProjectReplyByPreplyNo" parameterType="java.lang.Long" resultType="KphUserBoardProjectReply">
+		SELECT *
+		FROM BOARD_PROJECT_REPLY bpr, USERS u
+		WHERE bpr.USER_NO = u.USER_NO
+			AND PREPLY_NO = #{preply_no}
+	</select>
+	
+</mapper>

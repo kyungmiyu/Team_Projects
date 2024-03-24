@@ -1,0 +1,55 @@
+@import url("https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css");
+.pagetitle {
+  margin-bottom: 30px;
+}
+.fnt-nanum {
+  font-family: "NanumSquare", sans-serif;
+}
+.fnt-size20 {
+  font-size: 20px;
+}
+.bg-white{
+  background-color: white;
+}
+.main-div {
+  min-width: 1200px;
+  min-height: 700px;
+  padding: 15px;
+}
+.main-top {
+  min-height: 50px;
+  align-items: center;
+}
+.main-mid{
+  width: 100%;
+  min-height: 650px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(1, 41, 112, 0.1);
+  padding: 30px 25px;
+  position: relative;
+}
+.card-top {
+  width: 100%;
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: flex-end;
+}
+.searchInput{
+  width: 400px;
+  margin: 0 10px;
+}
+.searchSelete{
+  width: 100px;
+  height: 100%;
+}
+.mid-bottom{
+  position: absolute;
+  bottom: 25px;
+  height: 40px;
+  width: 95%;
+  display: flex;
+}
+.span-smallId{
+  font-size: 13px;
+  color: gray;
+}

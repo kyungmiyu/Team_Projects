@@ -1,0 +1,253 @@
+@import url("https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css");
+
+.main-mindiv {
+  min-width: 100%;
+  min-height: 900px;
+  margin: 0 0;
+  padding: 0 0;
+}
+
+.main-top {
+  margin-top: 15px;
+  margin-left: 10px;
+  min-width: 90%;
+  display: flex;
+  justify-content: space-between;
+}
+.top-btnsdiv {
+  min-width: 40%;
+}
+
+.top-btn {
+  width: 150px;
+}
+.top-btn:hover {
+  background-color: #88a2fd !important;
+  color: gray;
+}
+
+.bg-blue {
+  background-color: #88a2fd;
+}
+
+.bg-realblue {
+  background-color: #486ef3;
+}
+
+.fnt-nanum {
+  font-family: "NanumSquare", sans-serif;
+}
+
+.cl-white {
+  color: white;
+}
+
+.top-btnsdiv button {
+  margin-left: 15px;
+}
+
+.top-btnsdiv button:hover {
+  background-color: RGB(181, 43, 252);
+  color: black;
+}
+.main-top-right {
+  min-width: 160px;
+}
+.fl-right {
+  float: right;
+}
+.margin-left-10 {
+  margin-left: 10px;
+}
+.main-mid {
+  max-width: 95%;
+  min-height: 750px;
+  min-width: 1500px;
+  margin: 10px auto;
+  border-radius: 10px;
+  padding: 10px 10px;
+  display: flex;
+}
+.main-side {
+  min-width: 400px;
+  max-width: 400px;
+  min-height: 700px;
+  border-radius: 10px;
+  padding: 8px;
+  box-shadow: 0px 0 30px rgba(1, 41, 112, 0.1);
+}
+.main-side-top {
+  display: flex;
+  justify-content: space-between;
+}
+.main-side-top-title {
+  padding-left: 10px;
+  font-size: 18px;
+  color: #486ef3;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+}
+
+.main-side-top-btn .plus-btn {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.plus-btn:hover {
+  background-color: #486ef3 !important;
+}
+.main-side-top-btn button:hover {
+  background-color: RGB(181, 43, 252);
+  color: black;
+}
+.main-side-mid {
+  max-height: 700px;
+  min-height: 700px;
+  overflow: auto;
+}
+.main-side-mid-content {
+  border: 1px solid rgb(193, 222, 250);
+  width: 100%;
+  height: 200px;
+  margin: 10px 0;
+  border-radius: 10px;
+  padding: 5px;
+}
+.mid-content-top {
+  height: 40px;
+  display: flex;
+  justify-content: space-between;
+}
+.mid-content-title {
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  font-weight: 800;
+  text-indent: 8px;
+}
+.main-side-mid-content hr {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.mid-content-mid {
+  width: 100%;
+  height: 140px;
+  padding: 10px;
+}
+.mid-content-mid .content {
+  width: 100%;
+  height: 43px;
+  display: flex;
+  margin-bottom: 5px;
+}
+.mid-content-mid .content div {
+  margin-right: 20px;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.mid-content-mid div i {
+  font-size: 1.5rem;
+}
+.mid-content-mid .content .content-first {
+  width: 130px;
+  border-radius: 10%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.mid-content-mid .content .content-second {
+  border: 1px solid rgb(213, 213, 213);
+  width: 80px;
+  height: 100%;
+  border-radius: 5px;
+}
+.mid-content-mid .content .content-third {
+  font-size: 1rem;
+  font-weight: bold;
+}
+.border0 {
+  border: 0;
+}
+.border0:hover {
+  background-color: white;
+  color: gray;
+}
+.bordergray {
+  border: 1px solid rgb(168, 168, 168);
+}
+.main-middle {
+  border-radius: 5px;
+  margin-left: 5px;
+  width: 100%;
+  min-width: 1000px;
+  padding: 15px;
+  box-shadow: 0px 0 30px rgba(1, 41, 112, 0.1);
+}
+.main-middle-top {
+  height: 20%;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+.main-middle-mid {
+  border-radius: 5px;
+  padding: 15px;
+  height: 580px;
+}
+.main-middle-top-title {
+  font-size: 18px;
+  color: #486ef3;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+}
+.middle-top-content {
+  height: 100px;
+  width: 30%;
+  border-radius: 5px;
+  background-color: #88a2fd;
+  color: white;
+  align-items: center;
+  padding: 20px;
+  position: relative;
+}
+.middle-top-content p:first-child {
+  font-family: "NanumSquare", sans-serif;
+  font-weight: bold;
+  font-size: 20px;
+  margin-bottom: 0.1rem;
+}
+.middle-top-content p a {
+  text-decoration: underline;
+  color: white;
+}
+.middle-top-content-innerdiv {
+  width: 60px;
+  height: 60px;
+  position: absolute;
+  right: 30px;
+  top: 20px;
+  border-radius: 5px;
+  background-color: white;
+  color: #486ef3;
+  line-height: 60px;
+  text-align: center;
+  font-family: "NanumSquare", sans-serif;
+  font-weight: 800;
+}
+.main-middle-mid-title {
+  font-size: 18px;
+  color: #486ef3;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+}
+.main-middle-calender {
+  border: 1px solid rgb(213, 213, 213);
+  height: 520px;
+  border-radius: 10px;
+}

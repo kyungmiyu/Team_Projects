@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blackberry.s20240130103.KphProcedureMapper">
+			
+	<insert id="kphProjectInsertProc" parameterType="KphProject" statementType="CALLABLE">
+      {
+         CALL KPH_PROJECT_INSERT_PROC (
+            #{project_title, mode=IN, jdbcType=VARCHAR}
+            ,#{project_content, mode=IN, jdbcType=VARCHAR}
+            ,#{project_start, mode=IN, jdbcType=DATE}
+            ,#{project_end, mode=IN, jdbcType=DATE}
+            ,#{user_no, mode=IN, jdbcType=INTEGER}
+         )
+      }
+   </insert>
+   
+
+   <insert id="kphTaskInsertProc" parameterType="KphTask" statementType="CALLABLE">
+		 {
+         CALL KPH_TASK_INSERT_PROC (
+            #{project_no, mode=IN, jdbcType=INTEGER}
+            ,#{task_title, mode=IN, jdbcType=VARCHAR}
+            ,#{task_start, mode=IN, jdbcType=DATE}
+            ,#{task_end, mode=IN, jdbcType=VARCHAR}
+            ,#{po_task_no, mode=OUT, jdbcType=INTEGER}
+         )
+      	}
+	</insert>
+	
+	<update id="kphTaskUpdateProc" parameterType="KphTask" statementType="CALLABLE">
+		{
+         CALL KPH_TASK_UPDATE_PROC (
+            #{project_no, mode=IN, jdbcType=INTEGER}
+            ,#{task_no, mode=IN, jdbcType=INTEGER}
+            ,#{task_title, mode=IN, jdbcType=VARCHAR}
+            ,#{task_start, mode=IN, jdbcType=DATE}
+            ,#{task_end, mode=IN, jdbcType=VARCHAR}
+            ,#{po_task_no, mode=OUT, jdbcType=INTEGER}
+         )
+      	}
+	</update>
+</mapper>

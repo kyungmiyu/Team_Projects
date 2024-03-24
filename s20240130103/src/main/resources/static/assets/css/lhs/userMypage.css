@@ -1,0 +1,22 @@
+@charset "UTF-8";
+
+.userProfileSize{
+	max-width: 300px; /* 최대 너비 */
+    max-height: 350px; /* 최대 높이 */
+}
+
+.row{
+	margin-bottom: 15px;
+}
+.photoUsername{
+	margin : 10px;
+}
+.fntsize25 i{
+	font-size: 25px;
+}
+.bi-star-fill{
+	color: #eded06;
+}
+.fntsize25 p{
+	text-align: center;
+}

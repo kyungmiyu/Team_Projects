@@ -1,0 +1,86 @@
+@charset "UTF-8";
+
+@import url('https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css');
+
+
+/* 바디 전체 */
+body {
+	margin: 0;
+	padding: 0;
+	height: 100vh;
+    background: linear-gradient(to right bottom, #486ef3, #b52bfc 75%);
+    background-attachment: fixed; /* 배경 고정 이거 안하면 화면줄였을때 배경 잘려보임*/
+	color: #FFFFFF;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	font-family: 'NanumSquare', sans-serif;
+}
+
+/* 텍스트객체 & 이미지객체 */
+.container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-top: 50px;
+	font-size: 1.05em;
+}
+/* 텍스트 전체 */
+.textContent {
+	text-align: left;
+	margin-right: 350px;
+	/*text와 이미지 서로 거리*/
+	margin-bottom: 30px;
+}
+
+.subText {
+	font-size: 1.1em;
+	margin-left: 7px;
+}
+
+/* Blueberry 타이틀 텍스트 */
+.indexTitle {
+	font-size: 6.5em;
+	margin-bottom: 0px;
+	font-family: 'NanumSquare', sans-serif;
+	font-weight: 700;
+}
+
+/* 시작하기 버튼 */
+.startBnt a {
+	color: #486ef3;
+	text-decoration: none;
+	background-color: #FFFFFF;
+	padding: 10px 30px;
+	border-radius: 10px;
+	display: inline-block;
+	margin-left: 7px;
+	font-weight: bold;
+}
+
+.startBnt a:hover {
+	color: #FFFFFF;
+	background-color: #486ef3;
+}
+
+/* logo box frame */
+.imageLogo {
+	margin-top: 30px;
+	background-color: #FFFFFF;
+	padding: 30px;
+	border-radius: 50px;
+	width: 400px;
+	height: 400px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 400px;
+}
+
+.imageLogo img {
+	max-width: 90%;
+	max-height: 90%;
+	display: block;
+	margin: 0 auto;
+}

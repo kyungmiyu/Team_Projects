@@ -1,0 +1,342 @@
+@import url('https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css');
+/*--------------------------------------------------------------
+# section
+--------------------------------------------------------------*/
+/* Card */
+/* Card */
+.card1 {
+	margin-bottom: 30px;
+	background-color: white;
+	width: 30%;
+	height: 700px;
+	border: none;
+	border-radius: 5px;
+	box-shadow: 0px 0 30px rgba(1, 41, 112, 0.1);
+	overflow-y: auto;
+}
+
+.card2 {
+	margin-bottom: 30px;
+	background-color: white;
+	width: 68%;
+	border: none;
+	border-radius: 5px;
+	box-shadow: 0px 0 30px rgba(1, 41, 112, 0.1);
+	overflow-y: auto;
+}
+
+.my-project-detail {
+	margin-bottom: 20px;
+}
+
+.my-project-detail>div:last-child {
+	display: flex;
+}
+
+.detail-card {
+	background-color: #0d6efd;
+	width: 100%;
+	border: none;
+	border-radius: 5px;
+	box-shadow: 0px 0 10px rgba(1, 41, 112, 0.1);
+}
+
+.detail-card .card-title {
+	color: white;
+	font-size: 25px;
+}
+
+.card-body {
+	padding: 20px 20px 20px 20px;
+}
+
+.card-body> div {
+	justify-content: space-between;
+}
+
+.card-title {
+	padding: 0px 0 15px 0;
+	font-size: 18px;
+	font-weight: 500;
+	color: #0d6efd;
+	font-family: "Poppins", sans-serif;
+}
+
+.my-project-detail div:first-child {
+	display: flex;
+}
+
+.my-project-title {
+	display: flex;
+}
+
+.project .card-body .my-project-detail-title {
+	font-family: 'NanumSquare', sans-serif;
+	font-weight: bold;
+	width: 240px;
+	margin-top: 7px;
+	color: white;
+}
+
+.my-project-title .card-title {
+	font-family: 'NanumSquare', sans-serif;
+	font-weight: 800;
+	width: 240px;
+}
+
+.all-project-report-box {
+	display: flex;
+	justify-content: space-between;
+}
+
+.all-project-report-detail {
+	flex: initial;
+	margin-bottom: 40px;
+	flex-shrink: 0;
+	display: flex;
+	align-items: center;
+	background-color: #0d6efd;
+	color: white;
+	height: 120px;
+	width: 32%;
+	border: none;
+	border-radius: 5px;
+	box-shadow: 0px 0 10px rgba(1, 41, 112, 0.1);
+	overflow-y: auto;
+}
+
+.all-project-report-detail div p a {
+	text-decoration: none;
+	color: white;
+}
+
+.all-project-report-detail>div:first-child {
+	width: 78%
+}
+
+.all-project-report-detail>div p:first-child {
+	font-family: 'NanumSquare', sans-serif;
+	font-weight: bold;
+	font-size: 20px;
+	margin-bottom: 0.1rem;
+}
+
+.all-project-report-detail .compPercent {
+	width: 60px;
+	height: 60px;
+	border-radius: 0.375rem;
+	color: #0d6efd;
+	background-color: white;
+	line-height: 60px;
+	text-align: center;
+	font-family: 'NanumSquare', sans-serif;
+	font-weight: 800;
+}
+
+.all-project-report-detail>div p:last-child {
+	font-family: 'NanumSquare', sans-serif;
+	text-decoration: underline;
+	margin-bottom: 0rem;
+	font-size: large;
+}
+
+.summary .card-body h5 {
+	font-family: 'NanumSquare', sans-serif;
+	font-weight: 800;
+}
+
+/* Info Cards */
+.dashboard {
+	display: flex;
+	justify-content: space-between;
+}
+
+.dashboard .info-card {
+	margin-bottom: 10px;
+}
+
+/* button */
+.my-project-title a {
+	margin-top: -3px;
+}
+
+.my-project-title .plus-btn {
+	background-color: #0d6efd;
+	border: none;
+	color: white;
+	margin-top: -20px;
+	width: 28px;
+	height: 28px;
+	border-radius: 0.375rem;
+}
+
+.plus-btn:hover {
+	background-color: #8ca2f0;
+}
+
+.enter-btn {
+	background-color: white;
+	font-family: 'NanumSquare', sans-serif;
+	font-weight: bold;
+	border: none;
+	color: #0d6efd;
+	width: 80px;
+	height: 40px;
+	margin-top: 10px;
+	border-radius: 5px;
+	box-shadow: 0px 0 10px rgba(1, 41, 112, 0.1);
+}
+
+.evaluation-btn {
+	background-color: #ff6a07;
+	font-family: 'NanumSquare', sans-serif;
+	font-weight: bold;
+	border: none;
+	color: white;
+	width: 80px;
+	height: 40px;
+	margin-top: 5px;
+	border-radius: 20px;
+	box-shadow: 0px 0 10px rgba(1, 41, 112, 0.1);
+}
+
+.address-card-title {
+    font-size: 18px;
+	margin-bottom: 0;
+    color: #0d6efd;
+	
+}
+
+.address-header {
+	display: flex;
+	justify-content: space-between;
+	text-align: center;
+	align-items: center;
+	margin-bottom: 10px;
+}
+
+.search-form {
+	display: flex;
+	justify-content: space-between;
+	border: 0;
+    font-size: 14px;
+    color: #012970;
+    border: 1px solid rgba(1, 41, 112, 0.2);
+    padding: 7px 10px 7px 8px;
+    border-radius: 3px;
+    transition: 0.3s;
+    width: 250px;
+	margin-top: -10px;
+}
+
+.search-form input {
+	outline: none;
+	font-family: 'NanumSquare', sans-serif;
+	border: 0;
+}
+
+.search-form:focus-within,
+.search-form:hover {
+  box-shadow: 0 0 10px 0 rgba(1, 41, 112, 0.15);
+  border: 1px solid rgba(1, 41, 112, 0.3);
+}
+
+.search-form button {
+	border: 0;
+	padding: 0;
+	background: none;
+}
+
+.header .search-form button i {
+	color: #012970;
+}
+
+.address-list {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 20px;
+	overflow-y: auto;
+}
+
+.address-list .address-list-card {
+	display: flex;
+	align-items: center;
+	width: 32%;
+	height: 100px;
+	border-radius: 5px;
+	background-color: white;
+    border: 1px solid rgba(163, 162, 162, 0.473);
+	color: #212529;
+	box-shadow: 0 0 10px rgba(1, 41, 112, 0.1);
+	font-family: 'NanumSquare', sans-serif;
+}
+
+.address .address-list-card .address-list-card-detail {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+	margin: 20px;
+}
+
+.address .address-list-card .address-list-card-detail .profile-img-user-name {
+	display: flex;
+	justify-content: initial;
+	align-items: center;
+	width: 60%;
+}
+
+.address .address-list-card .address-list-card-detail .user-id {
+	margin-bottom: 0;
+	margin-left: 10px;
+	font-weight: 400;
+	font-size: small;
+	color: #999393;
+	margin-top: -3px;
+}
+
+.address .address-list-card .address-list-card-detail .address-list-profile-img {
+	width: 30px;
+	height: 30px;
+}
+
+.address .address-list-card .address-list-card-detail .user-name {
+	margin-bottom: 0;
+	margin-left: 10px;
+	font-weight: 700;
+}
+
+.address .address-list-card .address-list-card-detail .score-message {
+	display: flex;
+	align-items: center;
+}
+
+.address .address-list-card .address-list-card-detail .user-score {
+	background-color: #0d6efd;
+	color: white;
+	width: 40px;
+	height: 40px;
+	text-align: center;
+	line-height: 40px;
+}
+
+.address .address-list-card .address-list-card-detail form {
+	margin-left: 5px;
+	display: flex;
+	align-items: center;
+}
+
+.address .address-list-card .address-list-card-detail .message {
+	width: 40px;
+	height: 40px;
+	background-color: #486ef3;
+	border: none;
+}
+
+.address .address-list-card .address-list-card-detail .message i {
+	color: white;
+}
+
+.progress-bar {
+	background-color: white !important;
+}

@@ -1,0 +1,166 @@
+@import url('https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css');
+.logo img {
+    max-height: 20px;
+    margin-right: 12px;
+}
+.header {
+  transition: all 0.5s;
+  z-index: 997;
+  height: 60px;
+  box-shadow: 0px 2px 20px rgba(1, 41, 112, 0.1);
+  background-color: #fff;
+  padding-left: 20px;
+  /* Toggle Sidebar Button */
+  /* Search Bar */
+}
+.login-banner {
+	height: 80px;
+	width: 120px;
+	margin-bottom: 30px;
+}
+.login-banner img{
+	height: 100%;
+	width: 100%;
+}
+
+.joinbtn{
+	background-color: #0d6efd;
+	color : white !important;
+	--bs-btn-padding-x: 0.75rem;
+    --bs-btn-padding-y: 0.375rem;
+    --bs-btn-font-family: ;
+    --bs-btn-font-size: 1rem;
+    --bs-btn-font-weight: 400;
+    --bs-btn-line-height: 1.5;
+
+    --bs-btn-bg: transparent;
+    --bs-btn-border-width: var(--bs-border-width);
+    --bs-btn-border-color: transparent;
+    --bs-btn-border-radius: var(--bs-border-radius);
+    --bs-btn-hover-border-color: transparent;
+    --bs-btn-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15),0 1px 1px rgba(0, 0, 0, 0.075);
+    --bs-btn-disabled-opacity: 0.65;
+    --bs-btn-focus-box-shadow: 0 0 0 0.25rem rgba(var(--bs-btn-focus-shadow-rgb), .5);
+    display: inline-block;
+    padding: var(--bs-btn-padding-y) var(--bs-btn-padding-x);
+    font-family: var(--bs-btn-font-family);
+    font-size: var(--bs-btn-font-size);
+    font-weight: var(--bs-btn-font-weight);
+    line-height: var(--bs-btn-line-height);
+    color: var(--bs-btn-color);
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+
+    -moz-user-select: none;
+    user-select: none;
+    border: var(--bs-btn-border-width) solid var(--bs-btn-border-color);
+    border-radius: var(--bs-btn-border-radius);
+}
+
+.subText {
+      font-size: 1.1em;
+      margin-left: 7px;
+}
+/* Blueberry 타이틀 텍스트 */
+.indexTitle {
+      font-size: 6.5em;
+      margin-bottom: 10px;
+}
+
+/* logo box frame */
+.imageLogo {
+      margin-top: 30px;
+      background-color: #FFFFFF;
+      padding: 30px;
+      border-radius: 50px;
+      width: 400px;
+      height: 400px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+}
+.imageLogo img {
+      max-width: 90%;
+      max-height: 90%;
+      display: block;
+      margin: 0 auto;
+}
+.jointermsBig {
+	height: 50%;
+	width: 50%;
+	background-color: white;
+}
+.jointermsBig p{
+	text-align: center;
+	font-family: "Nunito", sans-serif;
+	font-size: 30px;
+}
+.jointermsBig textarea{
+	width: 100%;
+}
+.termsBtnsdiv{
+	text-align: center;
+}
+.inlinediv {
+    display: flex;
+    align-items: center;
+    width: 80%;
+}
+
+.inlinediv input[type="text"],
+.inlinediv button {
+    flex: 0 0 auto;
+}
+.inlinediv button{
+	margin-left: 10px;
+}
+
+.inlinedivwid100 {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+.inlinedivwid100 button {
+    flex: 0 0 auto;
+}
+.inlinedivwid100 button{
+	margin-left: 10px;
+}
+
+.wid50 {
+	width: 50%;
+}
+.wid80 {
+	width : 80%;
+}
+#file{
+	width : 40%;
+}
+#joinPicture{
+	max-height: 400px;
+	max-width: 300px;
+}
+.enableId{
+	color: blue;
+	display: none;
+}
+.disableId{
+	color: red;
+	display: none;
+}
+.loginfail{
+	color:red;
+}
+.enablePass{
+	color: blue;
+	display: none;
+}
+.disablePass{
+	color: red;
+	display: none;
+}
+.w600_h400{
+	min-width: 600px;
+    min-height: 400px;
+}

@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blackberry.s20240130103.BoardStudyMapper">
+	<select id="ykmGetPostList" parameterType="YkmBoardComm" resultType="YkmBoardComm">	
+		SELECT a.*
+		FROM (SELECT ROWNUM rn , a.*
+		FROM (SELECT B.CBOARD_NO, B.CBOARD_TITLE, B.CBOARD_VIEWCNT, B.CBOARD_DATE, B.COMM_BIG2 ,B.COMM_MID2, U.USER_ID, U.USER_NIC,
+				       (SELECT COUNT(creply_no) FROM BOARD_COMM_REPLY WHERE CREPLY_DELETE_CHK = 0 AND CBOARD_NO = B.CBOARD_NO) AS reply_count
+						FROM BOARD_COMM B
+						JOIN USERS U ON U.USER_NO = B.USER_NO
+						WHERE B.COMM_BIG = 200 
+						AND B.COMM_MID = 20
+						AND B.CBOARD_DELETE_CHK = 0
+				<choose>
+					<when test='type == "A"'>
+						AND (B.CBOARD_TITLE LIKE '%'||#{keyword}||'%'
+		                   OR B.CBOARD_CONTENT LIKE '%'||#{keyword}||'%'
+		                   OR U.USER_NIC = #{keyword}
+		                   )
+					</when>
+				<when test='type == "TC"'>
+					AND (B.CBOARD_TITLE LIKE '%'||#{keyword}||'%' OR B.CBOARD_CONTENT LIKE '%'||#{keyword}||'%')
+				</when>
+				<when test='type == "W"'>
+					AND U.USER_NIC LIKE #{keyword}
+				</when>
+				<otherwise>
+				</otherwise>
+				</choose>
+						<choose>
+			 			<when test="comm_mid2 != 99">
+			 			    AND B.COMM_BIG2 = 400
+			 	 	  		AND B.COMM_MID2 = #{comm_mid2}
+			  			</when>
+			            <otherwise>
+			                AND B.COMM_BIG2 = 400
+			            </otherwise>
+			           </choose>
+						ORDER BY B.CBOARD_DATE DESC) a) a
+		WHERE a.rn BETWEEN #{start} AND #{end}
+	</select>
+	
+	
+	<select id="ykmGetPost" resultType="YkmBoardComm" parameterType="int">
+		SELECT B.*, U.USER_ID, U.USER_NIC, U.USER_PROFILE
+		FROM BOARD_COMM B,USERS U
+		WHERE B.CBOARD_NO = #{cboard_no}
+		AND B.USER_NO = U.USER_NO
+	</select>
+	
+	<insert id="ykmWritePost" parameterType="YkmBoardComm" useGeneratedKeys="true" keyColumn="cboard_no" keyProperty="cboard_no">
+		INSERT INTO BOARD_COMM (CBOARD_NO,
+								CBOARD_TITLE,
+								CBOARD_CONTENT,
+								CBOARD_VIEWCNT,
+								CBOARD_DATE,
+								USER_NO,
+								CBOARD_DELETE_CHK,
+								COMM_BIG,
+								COMM_MID,
+								COMM_BIG2,
+								COMM_MID2,
+								COMM_UPDATE_DATE)
+		VALUES (SEQ_BOARD_COMM.NEXTVAL, #{cboard_title}, #{cboard_content}, 0, sysdate, #{user_no}, 0, #{comm_big}, ${comm_mid}, 400, 10, NULL)
+	</insert>
+	
+	<update id="ykmUpdatePost" parameterType="YkmBoardComm">
+		UPDATE BOARD_COMM
+		SET CBOARD_TITLE = #{cboard_title}, CBOARD_CONTENT = #{cboard_content}, COMM_UPDATE_DATE = sysdate
+		WHERE CBOARD_NO = #{cboard_no}
+	</update>
+	
+	<update id="ykmDeletePost" parameterType="int">
+		UPDATE BOARD_COMM
+		SET CBOARD_DELETE_CHK = 1, COMM_UPDATE_DATE = SYSDATE
+		WHERE CBOARD_NO = #{cboard_no}
+	</update>
+	
+	<update id="ykmIncreseViewCount" parameterType="int">
+		UPDATE BOARD_COMM
+		SET CBOARD_VIEWCNT = CBOARD_VIEWCNT + 1
+		WHERE CBOARD_NO = #{cboard_no}
+	</update>
+	
+ 	<update id="ykmUpdateRecruitment" parameterType="YkmBoardComm">
+ 		UPDATE BOARD_COMM
+		SET COMM_MID2 = #{comm_mid2}
+		WHERE CBOARD_NO = #{cboard_no}
+ 	</update>
+ 	
+	<!-- 스터디 게시판 전체 게시글 카운트  -->
+	<select id="ykmGetTotalCount" parameterType="YkmBoardComm" resultType="int">
+		SELECT COUNT(*)
+		FROM BOARD_COMM B, USERS U
+		WHERE B.USER_NO = U.USER_NO 
+		AND B.COMM_BIG = 200
+		AND B.COMM_MID = 20
+		  <choose>
+ 			<when test='type == "A"'>
+ 				AND (B.CBOARD_TITLE LIKE '%'||#{keyword}||'%'
+                    OR B.CBOARD_CONTENT LIKE '%'||#{keyword}||'%'
+                    OR U.USER_NIC = #{keyword}
+                    )
+ 			</when>
+			<when test='type == "TC"'>
+				AND (B.CBOARD_TITLE LIKE '%'||#{keyword}||'%' OR B.CBOARD_CONTENT LIKE '%'||#{keyword}||'%')
+			</when>
+			<when test='type == "W"'>
+				AND U.USER_NIC = #{keyword}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	 	  <choose>
+			<when test="comm_mid2 != 99">
+			    AND B.COMM_BIG2 = 400
+	 	  		AND B.COMM_MID2 = #{comm_mid2}
+ 			</when>
+           <otherwise>
+               AND B.COMM_BIG2 = 400
+           </otherwise>
+          </choose>
+	</select>
+	
+	<insert id="ykmSaveFileList" parameterType="YkmBoardCommFile" >
+		INSERT INTO BOARD_COMM_FILE (CBOARD_NO, CBOARD_FILE_NAME, CBOARD_FILE_USER_NAME, CBOARD_FILE_CNT)
+		VALUES (
+				#{cboard_no}, 
+				#{cboard_file_name}, 
+				#{cboard_file_user_name}, 
+				(SELECT NVL(MAX(cboard_file_cnt), 0) + 1 FROM BOARD_COMM_FILE WHERE CBOARD_NO = #{cboard_no})
+			   )
+	</insert>
+
+	<select id="ykmGetFileList" parameterType="Integer" resultType="YkmBoardCommFile">
+	    SELECT BCF.CBOARD_NO, BCF.CBOARD_FILE_CNT, BCF.CBOARD_FILE_NAME, BCF.CBOARD_FILE_USER_NAME
+	    FROM BOARD_COMM_FILE BCF 
+	    WHERE bcf.CBOARD_NO = #{cboard_no}
+	</select>
+
+	
+	<!-- 댓글 -->
+	<select id="ykmGetCommentList" resultType="YkmBoardCommReply" parameterType="int">
+		SELECT 
+		    bcr.CREPLY_NO, 
+		    bcr.CREPLY_CONTENT, 
+		    bcr.COMM_UPDATE_DATE,
+		    bcr.CREPLY_DATE, 
+		    bcr.CBOARD_NO, 
+		    bcr.CREPLY_DELETE_CHK,
+		    bcr.CREPLY_GROUP,
+		    bcr.CREPLY_INDENT,
+		    bcr.CREPLY_LEVEL,
+		    bc.COMM_BIG, 
+		    bc.COMM_MID, 
+		    u.USER_ID, 
+		    u.USER_NO, 
+		    u.USER_NIC,
+		    u.USER_PROFILE
+		 FROM 
+		    BOARD_COMM_REPLY bcr
+		JOIN 
+		    USERS u ON bcr.USER_NO = u.USER_NO
+		JOIN 
+		    BOARD_COMM bc ON bcr.CBOARD_NO = bc.CBOARD_NO
+		WHERE 
+		    bc.CBOARD_NO = #{cboard_no}
+		ORDER BY 
+		    CASE WHEN bcr.CREPLY_INDENT = 0 THEN bcr.CREPLY_NO ELSE bcr.CREPLY_GROUP END,
+		    bcr.CREPLY_GROUP DESC,
+		    bcr.CREPLY_LEVEL ASC,
+		    bcr.CREPLY_DATE DESC
+	</select>
+	
+	<insert id="ykmWriteComment" parameterType="YkmBoardCommReply">
+		INSERT INTO BOARD_COMM_REPLY (CREPLY_NO, CREPLY_CONTENT, CREPLY_DATE, CREPLY_GROUP, CREPLY_LEVEL, 
+									  CREPLY_INDENT, CBOARD_NO, USER_NO, CREPLY_DELETE_CHK, COMM_UPDATE_DATE
+									  )
+		VALUES (
+				SEQ_BOARD_COMM_REPLY.NEXTVAL, 
+				#{creply_content}, 
+				sysdate, 
+				SEQ_BOARD_COMM_REPLY.CURRVAL, 
+				0, 
+				0, 
+				#{cboard_no}, 
+				#{user_no}, 
+				0, 
+				NULL
+				)
+	</insert>
+
+	<update id="ykmDeleteComment" parameterType="int">
+		UPDATE BOARD_COMM_REPLY
+		SET CREPLY_DELETE_CHK = 1, COMM_UPDATE_DATE = sysdate
+		WHERE CREPLY_NO = #{creply_no}
+	</update>
+	
+	<update id="ykmUpdateComment" parameterType="YkmBoardCommReply">
+		UPDATE BOARD_COMM_REPLY
+		SET CREPLY_CONTENT = #{creply_content}, COMM_UPDATE_DATE = sysdate
+		WHERE creply_no = #{creply_no}
+	</update>
+
+	<select id="ykmCountComment" resultType="int" parameterType="int">
+		SELECT COUNT(BCR.CREPLY_NO) countComment, BCR.CBOARD_NO
+		FROM BOARD_COMM_REPLY BCR
+		JOIN BOARD_COMM B ON BCR.CBOARD_NO = B.CBOARD_NO
+		WHERE BCR.CBOARD_NO = #{cboard_no}
+		AND B.COMM_BIG = 200 
+		AND B.COMM_MID = 20
+		AND BCR.CREPLY_DELETE_CHK = 0
+		GROUP BY BCR.CBOARD_NO
+	</select>
+	
+	<select id="ykmGetPostWriter" resultType="int" parameterType="int">
+		SELECT b.user_no
+		FROM BOARD_COMM b
+		WHERE b.CBOARD_NO = #{cboard_no}
+		AND b.COMM_BIG = 200
+		AND b.COMM_MID = 20
+	</select>
+	
+	<insert id="ykmWriteReply" parameterType="YkmBoardCommReply">
+		INSERT INTO BOARD_COMM_REPLY (CREPLY_NO, CREPLY_CONTENT, CREPLY_DATE, CREPLY_GROUP, CREPLY_LEVEL, 
+									  CREPLY_INDENT, CBOARD_NO, USER_NO, CREPLY_DELETE_CHK, COMM_UPDATE_DATE
+									  )
+		VALUES (
+				SEQ_BOARD_COMM_REPLY.NEXTVAL, 
+				#{creply_content}, 
+				sysdate, 
+				#{creply_group}, 
+				#{creply_level}, 
+				#{creply_indent},
+				#{cboard_no},
+				#{user_no}, 
+				0, 
+				NULL
+				)
+	</insert>
+	
+	<select id="ykmGetReplyNo" parameterType="YkmBoardCommReply" resultType="YkmBoardCommReply">
+		SELECT *
+		FROM BOARD_COMM_REPLY
+		WHERE CREPLY_NO = #{creply_no}
+	</select>
+	
+	
+	<update id="ykmUpdateGroup" parameterType="YkmBoardCommReply">
+		UPDATE BOARD_COMM_REPLY
+		SET CREPLY_LEVEL = CREPLY_LEVEL + 1
+		WHERE CREPLY_GROUP = #{creply_group}
+		AND CREPLY_LEVEL >= #{creply_level}
+	</update>
+ 	
+ 	<delete id="ykmDeleteBoardFile" parameterType="YkmBoardCommFile">
+ 		delete
+		from board_comm_file
+		where cboard_no = #{cboard_no}
+		and cboard_file_cnt = #{cboard_file_cnt}
+ 	</delete>
+ 	
+</mapper>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.blackberry.s20240130103.lsl.BoardFreeAskFileMapper">
+	<update id="slInsertBoradFile" parameterType="LslboardFile">
+		INSERT INTO
+		BOARD_COMM_FILE
+		(cboard_no,
+		cboard_file_name,
+		cboard_file_user_name,
+		cboard_file_cnt)
+		VALUES(
+		#{cboard_no},
+		#{cboard_file_name},
+		#{cboard_file_user_name},
+		(SELECT
+		NVL(MAX(cboard_file_cnt), 0) + 1
+		FROM
+		BOARD_COMM_FILE
+		WHERE cboard_no = #{cboard_no})
+		)
+	</update>
+
+	<delete id="sldeleteBoardOldData" parameterType="int">
+		DELETE
+		FROM BOARD_COMM_FILE
+		WHERE cboard_no = #{cboard_no}
+	</delete>
+
+	<update id="slboardUpdate" parameterType="LslBoardComm">
+		update board_comm
+		set
+		cboard_title =#{cboard_title}, cboard_content = #{cboard_content},
+		COMM_UPDATE_DATE = sysdate
+		where cboard_no = #{cboard_no}
+	</update>
+	
+	<delete id="sldeleteBoardFile" parameterType="LslboardFile">
+		delete
+		from board_comm_file
+		where cboard_no = #{cboard_no}
+		and cboard_file_cnt = #{cboard_file_cnt}
+	</delete>
+</mapper>

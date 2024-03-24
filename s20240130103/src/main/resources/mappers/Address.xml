@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blackberry.s20240130103.lhs.Address">
+    <select id="lhsAddresschkcnt" parameterType="LhsAddress" resultType="int">
+		SELECT count(*)
+		FROM address 
+		WHERE (user_no = #{user_no} AND re_user_no = #{re_user_no}) 
+		OR (user_no = #{re_user_no} AND re_user_no = #{user_no})
+	</select>
+	<insert id="lhsAddressAdd" parameterType="LhsAddress">
+		insert into address values(#{user_no},#{re_user_no},0)
+	</insert>
+	
+	<select id="lhsAddressRequestList" parameterType="Long" resultType="KphUsers">
+		SELECT u2.*,a.user_score
+		FROM USERS u2,(SELECT u.user_no,nvl(avg(e.eval_score),0) user_score
+						FROM USERS u,EVAL e 
+						WHERE u.USER_NO IN (SELECT re_user_no
+											FROM ADDRESS a 
+											WHERE AGREE_CHK =0
+											AND user_no = #{addressUserNo})
+						AND u.USER_NO = e.PUSER(+) 
+						GROUP BY u.user_no) a
+		WHERE u2.user_no = a.user_no
+	</select>
+	
+	<select id="lhsAddressResponseList" parameterType="Long" resultType="KphUsers">
+		SELECT u2.*,a.user_score
+		FROM USERS u2,(SELECT u.user_no,nvl(avg(e.eval_score),0) user_score
+						FROM USERS u,EVAL e 
+						WHERE u.USER_NO IN (SELECT user_no
+											FROM ADDRESS a 
+											WHERE AGREE_CHK =0
+											AND re_user_no = #{addressUserNo})
+						AND u.USER_NO = e.PUSER(+) 
+						GROUP BY u.user_no) a
+		WHERE u2.user_no = a.user_no
+	</select>
+	
+	<update id="lhsAddressResponsePermit" parameterType="LhsAddress">
+		update address set agree_chk = 1 where re_user_no = #{re_user_no} and user_no = #{user_no}
+	</update>
+	
+	<delete id="lhsAddressDelete" parameterType="LhsAddress">
+		delete from address where re_user_no = #{re_user_no} and user_no = #{user_no}
+	</delete>
+	
+	<delete id="lhsAddressDelete2" parameterType="LhsAddress">
+		delete from address where re_user_no = #{user_no} and user_no = #{re_user_no}
+	</delete>
+	
+	
+	<select id="LhsHeaderNoReadAddressReqeustCnt" parameterType="String" resultType="int">
+		select count(*)
+		from address a
+		where a.agree_chk = 0
+		and a.re_user_no = #{userNo}
+	</select>
+	
+	<select id="LhsHeaderNoReadAddressRequestUserName" parameterType="String" resultType="String">
+		SELECT u.user_name
+		FROM USERS u 
+		WHERE u.USER_NO IN (SELECT a.USER_NO 
+							FROM ADDRESS a 
+							WHERE a.AGREE_CHK = 0 
+							AND a.RE_USER_NO = #{userNo})
+	</select>
+	
+</mapper>

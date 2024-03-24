@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blackberry.s20240130103.UserTaskMapper">
+					
+	<insert id="kphUserTaskInsert" parameterType="KphUserTask">
+		INSERT INTO USER_TASK_MANY
+		VALUES (#{project_no}, #{task_no}, #{user_no})
+	</insert>
+	
+	<delete id="kphUserTaskDelete" parameterType="KphTask">
+		DELETE FROM USER_TASK_MANY
+		WHERE PROJECT_NO = #{project_no}
+			AND TASK_NO = #{task_no}
+	</delete>
+
+</mapper>

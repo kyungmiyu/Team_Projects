@@ -1,0 +1,474 @@
+@import url('https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css');
+
+/*--------------------------------------------------------------
+# section
+--------------------------------------------------------------*/
+
+/* top */
+section {
+	position: relative;
+}
+
+.team-member-add-box-no-authority, .project-delete-box, .project-member-delete-box, .task-delete-box, .project-end-box {
+	display: none;
+	align-items: center;
+	justify-content: center;
+	border: 1px solid black;
+	border-radius: 10px;
+	border: 1px solid rgba(163, 162, 162, 0.473);
+	background-color: white;
+	padding: 20px;
+	width: 400px;
+	height: 200px;
+	position: absolute;
+	top: 20%;
+	left: 40%;
+	z-index: 1;
+	box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.1);
+	font-family: 'NanumSquare', sans-serif;
+}
+
+.team-member-add-box-no-authority> div, .project-delete-box> div, .project-member-delete-box> div, .task-delete-box> div, .project-end-box> div {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.team-member-add-box-no-authority-title, .project-delete-box-title, .project-member-delete-box-title, .task-delete-box-title, .project-end-box-title {
+	font-size: 1.25rem;
+	text-align: center;
+	width: 100%;
+	font-weight: 800;
+	margin-bottom: 20px;
+}
+
+.delete-btn-list, .member-delete-btn-list, .task-delete-btn-list, .end-btn-list {
+    margin: 0 auto;
+}
+
+.authority-cancle, .check-btn, .cancle-btn, .member-check-btn, .member-cancle-btn, .task-delete-check-btn, .task-delete-cancle-btn {
+	margin: 0 auto;
+	width: 100px;
+}
+
+.top {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.top .top-btn {
+	display: flex;
+}
+
+.top .top-btn .btn {
+	font-family: 'NanumSquare', sans-serif;
+	margin-right: 9px;
+	font-weight: 700;
+	width: 150px;
+	box-shadow: 0px 0 5px rgba(1, 41, 112, 0.1);
+}
+
+.top .top-btn .project-board-btn, .top .top-btn .project-schedule-btn {
+	border: 1px solid #82838542;
+	background-color: white;
+	transition: color 0.15s ease-in-out 0s, background-color 0.15s ease-in-out 0s, 
+	border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+	color: #012970;
+}
+
+.top .top-btn .project-board-btn:hover, .top .top-btn .project-schedule-btn:hover {
+	background-color: #b4b0b025;
+	color: #0d6efd;
+}
+
+.top .top-list {
+	display: flex;
+	align-items: center;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.top .top-list .team-list {
+	position: relative;
+}
+
+.top .top-list .team-list .team-list-title {
+	margin-right: 30px;
+	font-family: 'NanumSquare', sans-serif;
+	font-weight: 800;
+	padding: 7px 7px 7px 10px;
+	border-radius: 5px;
+}
+
+.top .top-list .team-list .team-list-title:hover {
+	cursor: pointer;
+	background-color: #b4b0b025;
+}
+
+.top .top-list .team-list .team-list-content {
+	display: none;
+    position: absolute;
+	padding: 10px 20px 10px 20px;
+	min-width: 200px;
+	list-style: none;
+	top: 42px;
+	right: 30px;
+    background-color: white;
+    box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.1);
+	font-family: 'NanumSquare', sans-serif;
+	border-radius: 8px;
+	z-index: 1;
+}
+
+.top .top-list .team-list .team-list-content li {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.068);
+	padding-bottom: 10px;
+	padding-top: 10px;
+	font-weight: 700;
+}
+
+
+.top .top-list .team-list .team-list-content li img {
+	width: 20px;
+	height: 20px;
+	margin-right: 5px;
+}
+
+.top .top-list .team-list .team-list-content li i:hover {
+    cursor: pointer;
+}
+
+.top .top-list .team-list .team-list-content li:last-child {
+	border-bottom: 0;
+}
+
+.top .top-list .team-list .team-list-content li:hover {
+	background-color: rgba(56, 159, 190, 0.123);
+}
+
+.top .top-list .setting {
+	position: relative;
+}
+
+.top .top-list .setting .bi-gear-fill {
+	font-size: 20px;
+	margin-right: 5px;
+}
+
+.top .top-list .setting .bi-gear-fill:hover {
+	cursor: pointer;
+}
+
+.top .top-list .setting .setting-content {
+	display: none;
+    position: absolute;
+	padding: 10px 20px 10px 20px;
+	min-width: 200px;
+	list-style: none;
+	top: 38px;
+	right: 5px;
+    background-color: white;
+    box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.1);
+	font-family: 'NanumSquare', sans-serif;
+	border-radius: 8px;
+	z-index: 1;
+}
+
+.top .top-list .setting .setting-content li {
+	border-bottom: 1px solid rgba(0, 0, 0, 0.068);
+	padding-bottom: 10px;
+	padding-top: 10px;
+	font-weight: 700;
+}
+
+.top .top-list .setting .setting-content a{
+	text-decoration: none;
+	color: #444444;
+}
+
+.top .top-list .setting .setting-content li:last-child {
+	border-bottom: 0;
+}
+
+.top .top-list .setting .setting-content li:hover {
+	background-color: rgba(56, 159, 190, 0.123);
+	cursor: pointer;
+}
+
+/* project home */
+
+.project-home {
+	margin-top: 15px;
+	margin-bottom: -10px;
+	display: flex;
+	justify-content: space-between;
+}
+
+.project-home .card {
+	margin-bottom: 30px;
+	padding: 20px 20px 20px 20px;
+	height: 700px;
+	border: none;
+	background-color: white;
+	background-position: none;
+	border-radius: 10px;
+	box-shadow: 0px 0 30px rgba(1, 41, 112, 0.1);
+	overflow-y: auto;
+}
+
+.project-home .card h5 {
+	font-family: 'NanumSquare', sans-serif;
+	font-weight: 800;
+	color: #0d6efd;
+	margin-bottom: 0;
+}
+
+/* project home - task card*/
+
+.project-home .task-card {
+	width: 30%;
+}
+
+.task-card-head {
+	display: flex;
+	align-content: center;
+	justify-content: space-between;
+	margin-bottom: 15px;
+}
+
+.task-card-head .plus-btn {
+	background-color: #0d6efd;
+    border: none;
+    color: white;
+    margin-top: -20px;
+    width: 28px;
+    height: 28px;
+    border-radius: 0.375rem;
+}
+
+.task-card-head .plus-btn:hover {
+	background-color: #0b5ed7;
+}
+
+.task-list .task-list-detail {
+	background-color: rgba(128, 128, 128, 0.062);
+	box-shadow: 0px 0 5px rgba(1, 41, 112, 0.1);
+	border: 1px solid rgba(163, 162, 162, 0.473);
+	min-height: 200px;
+	border-radius: 10px;
+	margin-bottom: 20px;
+}
+
+.task-list-detail .task-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 10px 10px 10px 10px;
+	background-color: white;
+	border-radius: 10px 10px 0 0;
+	font-family: 'NanumSquare', sans-serif;
+	font-weight: 800;
+}
+
+.task-head {
+	position: relative;
+}
+
+.task-head .task-title {
+	width: 90%;
+}
+
+.task-head i {
+	width: 5%;
+}
+
+.task-head i:hover {
+	cursor: pointer;
+}
+
+.task-head .task-setting {
+	display: none;
+    position: absolute;
+	padding: 10px 20px 10px 20px;
+	min-width: 100px;
+	list-style: none;
+	top: 38px;
+	right: 17px;
+    background-color: white;
+    box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.1);
+	font-family: 'NanumSquare', sans-serif;
+	border-radius: 8px;
+	z-index: 1;
+}
+
+.task-head .task-setting li {
+	border-bottom: 1px solid rgba(0, 0, 0, 0.068);
+	padding-bottom: 10px;
+	padding-top: 10px;
+	font-weight: 700;
+}
+
+.task-head .task-setting li:hover {
+	background-color: rgba(56, 159, 190, 0.123);
+	cursor: pointer;
+}
+
+.task-head .task-setting li:last-child {
+	border-bottom: 0;
+}
+
+.task-list-detail .task-detail {
+	padding: 10px;
+	font-family: 'NanumSquare', sans-serif;
+	font-weight: 600;
+}
+
+.task-detail> div {
+	display: flex;
+	align-items: center;
+	margin: 20px;
+	height: 30px;
+}
+
+.task-detail> div i {
+	font-size: 20px;
+	margin-right: 14px;
+	margin-top: 5px;
+}
+
+.task-comp-chk .comp-btn {
+	background-color: #0d6efd;
+    border: none;
+    color: white;
+    width: 80px;
+	line-height: 30px;
+    border-radius: 1rem;
+}
+
+.task-comp-chk .uncomp-btn {
+	background-color: #8d8e8f;
+    border: none;
+    color: white;
+    width: 80px;
+	line-height: 30px;
+    border-radius: 1rem;
+}
+
+.member .task-member-toggle {
+	position: relative;
+}
+
+.member .task-member-title {
+	background-color: white;
+	border: 1px solid rgba(163, 162, 162, 0.473);
+	border-radius: 5px;
+	width: 80px;
+	line-height: 30px;
+	text-align: center;
+}
+
+.member .task-member-title:hover {
+	background-color: rgba(56, 159, 190, 0.123);
+	cursor: pointer;
+}
+
+.member .task-member-list {
+	display: none;
+	position: absolute;
+	padding: 10px 20px 10px 20px;
+    min-width: 200px;
+    list-style: none;
+    background-color: white;
+    box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.1);
+    font-family: 'NanumSquare', sans-serif;
+    border-radius: 8px;
+    z-index: 1;
+}
+
+.member .task-member-list li {
+	display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.068);
+    padding-bottom: 10px;
+    padding-top: 10px;
+    font-weight: 700;
+}
+
+.member .task-member-list li:hover {
+	background-color: rgba(56, 159, 190, 0.123);
+}
+
+.member .task-member-list li:last-child {
+	border-bottom: 0;
+}
+
+.member .task-member-list li img {
+	width: 20px;
+	height: 20px;
+	margin-right: 10px;
+}
+
+/* project home - task-callender-card*/
+.project-home .task-callender-card {
+	width: 68%;
+}
+
+.task-callender-card .project-report-head {
+	margin-bottom: 15px;
+}
+
+.task-callender-card .project-report-content {
+	display: flex;
+	justify-content: space-between;
+	color: white;
+}
+
+.project-report-content .project-report-card {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 20px 20px 20px 20px;
+	background-color: #0d6efd;
+	width: 32%;
+	height: 120px;
+	border-radius: 10px;
+	font-family: 'NanumSquare', sans-serif;
+	box-shadow: 0px 0 10px rgba(1, 41, 112, 0.1);
+}
+
+.project-report-content .project-report-card p {
+	margin-bottom: 0;
+}
+
+.project-report-card p:first-child {
+	font-size: 20px;
+}
+
+.project-report-card p:last-child {
+	font-size: 18px;
+	text-decoration: underline;
+}
+
+.project-report-card p:last-child:hover {
+	cursor: pointer;
+}
+
+.project-report-card .compPercent {
+    width: 60px;
+    height: 60px;
+    border-radius: 0.375rem;
+    color: #0d6efd;
+    background-color: white;
+    line-height: 60px;
+    text-align: center;
+    font-weight: 800;
+}
+
+.task-callender-card .callender-card {
+	margin-top: 40px;
+}

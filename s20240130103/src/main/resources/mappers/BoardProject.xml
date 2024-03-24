@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blackberry.s20240130103.MessageMapper">
+
+	<!-- 게시글 개수 -->
+	<select id="totPboardListCnt" resultType="int"
+		parameterType="java.lang.Long">
+		SELECT COUNT(*) FROM board_project
+		WHERE project_no = #{projectNo}
+		AND pboard_delete_chk = 0
+	</select>
+	
+	<!-- 게시글 리스트 가져오기 -->
+	<select id="kdwPboardListAll" parameterType="KdwBoardProject"
+		resultType="KdwBoardProject">
+		SELECT bp.*, (
+					SELECT COUNT(*)
+			        FROM board_project_reply bpr
+			        WHERE bpr.pboard_no = bp.pboard_no
+			        AND bpr.preply_delete_chk = 0
+			        ) AS reply_count
+		FROM (
+		    SELECT a.*, ROWNUM AS rn
+		    FROM (
+		        SELECT bp.*, u.user_nic AS user_nic
+		        FROM board_project bp, users u
+		        WHERE bp.user_no = u.user_no
+		        AND bp.project_no = #{projectNo}
+		        AND bp.pboard_delete_chk = 0
+		        ORDER BY bp.pboard_no DESC
+		    ) a
+		) bp
+		WHERE rn BETWEEN #{start} AND #{end}
+	</select>
+	
+	<!-- !! 검색 기능 !! -->
+	<!-- 검색된 게시글 개수 -->
+	<!-- 하나의 게시글에 여러 댓글이기때문에 DISTINCT를 사용 -->
+	<select id="kdwSearchPboardListCnt" parameterType="map" resultType="int">
+	    SELECT COUNT(DISTINCT bp.pboard_no)
+	    FROM board_project bp, users u, Board_Project_Reply bpr
+	    WHERE bp.user_no = u.user_no
+	    AND bp.pboard_no = bpr.pboard_no(+)
+	    AND bp.project_no = #{projectNo}
+	    AND bp.pboard_delete_chk = 0
+	    AND (
+	        (#{type} = 'all' AND (u.user_nic LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\' 
+					          OR  bp.pboard_title LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\' 
+					          OR  bp.pboard_content LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\' 
+					          OR  bpr.preply_content LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'
+	        ))
+	        OR
+	        (#{type} = 'author' AND u.user_nic LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\')
+	        OR
+	        (#{type} = 'title' AND bp.pboard_title LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\')
+	        OR
+	        (#{type} = 'contentReply' AND (bp.pboard_content LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'
+	            					   OR bpr.preply_content LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'
+	        ))
+	    )
+	</select>
+	<!-- 검색된 게시글 리스트 -->
+	<select id="kdwSearchPboardList" parameterType="KdwBoardProject" resultType="KdwBoardProject">
+	    SELECT *
+	    FROM (
+	        SELECT a.*, ROWNUM AS rn
+	        FROM (
+	            SELECT DISTINCT bp.pboard_no, bp.project_no, bp.pboard_title, bp.pboard_content, 
+	            				bp.pboard_date, bp.pboard_cnt, bp.user_no, bp.pboard_delete_chk, 
+	            				bp.pboard_update_date, u.user_nic AS user_nic, (
+																				SELECT COUNT(*)
+																		        FROM board_project_reply bpr
+																		        WHERE bpr.pboard_no = bp.pboard_no
+																		        AND bpr.preply_delete_chk = 0
+																		        ) AS reply_count
+	            FROM board_project bp, users u, Board_Project_Reply bpr
+	            WHERE bp.user_no = u.user_no
+	            AND bp.pboard_no = bpr.pboard_no(+)
+	            AND bp.project_no = #{projectNo}
+	            AND bp.pboard_delete_chk = 0
+	            AND (
+				    (#{type} = 'all' AND (
+				        u.user_nic LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\' 
+				        OR bp.pboard_title LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\' 
+				        OR bp.pboard_content LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\' 
+				        OR bpr.preply_content LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'
+				    ))
+				    OR
+				    (#{type} = 'author' AND u.user_nic LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\')
+				    OR
+				    (#{type} = 'title' AND bp.pboard_title LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\')
+				    OR
+				    (#{type} = 'contentReply' AND (
+				        	bp.pboard_content LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'
+				        OR bpr.preply_content LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'
+				    ))
+			        )
+			        ORDER BY bp.pboard_no DESC
+			    ) a
+	    )
+	    WHERE rn BETWEEN #{start} AND #{end}
+	</select>
+	
+	<!-- !! 글 등록 & 파일 업로드 !! -->
+	<!-- 글 등록 -->
+	<insert id="kdwWriteSave" parameterType="KdwBoardProject"
+		useGeneratedKeys="true" keyColumn="pboard_no" keyProperty="pboard_no">
+		INSERT INTO
+		board_project (
+			pboard_no, project_no, pboard_title, pboard_content,
+			pboard_date, pboard_cnt, user_no, pboard_delete_chk, pboard_update_date)
+		VALUES
+		(SEQ_PBOARD.nextval, #{project_no}, #{pboard_title}, #{pboard_content}, 
+		SYSDATE, 0, #{user_no}, 0, null)
+	</insert>
+
+	<!-- 파일 등록 -->
+	<insert id="kdwSavePboardFile" parameterType="KdwBoardProjectFile">
+		INSERT INTO
+		board_project_file (pboard_no, pboard_file_name, pboard_file_user_name,
+		pboard_file_no)
+		VALUES (#{pboard_no}, #{pboard_file_name}, #{pboard_file_user_name},
+		(SELECT
+		NVL(MAX(pboard_file_no), 0) + 1
+		FROM board_project_file
+		WHERE pboard_no = #{pboard_no})
+		)
+	</insert>
+	
+	<!-- 글 수정 -->
+	<insert id="kdwUpdateSave" parameterType="KdwBoardProject">
+	    UPDATE board_project
+	    SET pboard_title = #{pboard_title},
+	        pboard_content = #{pboard_content},
+	        pboard_update_date = SYSDATE
+	    WHERE pboard_no = #{pboard_no}
+	</insert>
+	<!-- 첨부된 파일 목록 -->
+	<select id="kdwGetBoardWithFiles" resultType="KdwBoardProjectFile">
+	    SELECT pboard_no, pboard_file_no, pboard_file_name, pboard_file_user_name
+	    FROM board_project_file
+	    WHERE pboard_no = #{pboardNo}
+	    AND pboard_file_no = #{pboardFileNo}
+	</select>
+	
+	<!-- 파일 삭제 -->
+	<delete id="kdwdeleteFilesByPboardNo" parameterType="KdwBoardProjectFile">
+	    DELETE FROM board_project_file
+	    WHERE pboard_no = #{pboardNo}
+	    AND pboard_file_no = #{pboardFileNo}
+	</delete>
+	<select id="kdwGetFileDetails" resultType="KdwBoardProjectFile">
+	    SELECT pboard_no, pboard_file_no, pboard_file_name, pboard_file_user_name
+	    FROM board_project_file
+	    WHERE pboard_no = #{pboardNo}
+	    AND pboard_file_no = #{pboardFileNo}
+	</select>
+</mapper>

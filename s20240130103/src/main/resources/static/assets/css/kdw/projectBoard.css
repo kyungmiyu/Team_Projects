@@ -1,0 +1,305 @@
+@charset "UTF-8";
+
+@import url('https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css');
+
+body {
+    font-family: 'NanumSquare', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-shadow: 0 5px 20px 0 rgba(82, 63, 105, 0.2);
+}
+
+/* Card */
+.card {
+	position:relative;
+	margin-bottom: 10px;
+	min-width: 850px;
+	min-height: 500px;
+	width: 100%;
+	height: 700px;
+	background-color: white;
+	border: none;
+	border-radius: 9px;
+	box-shadow: 0px 0 30px rgba(1, 41, 112, 0.1);
+	margin-top: 15px;
+}
+
+.card-body {
+	padding: 20px 20px 20px 20px;
+}
+
+.card-body .nav {
+    margin-bottom: 30px;
+    border-bottom: 0;
+    font-weight: 600;
+}
+
+.controller {
+    display: flex;
+    justify-content: space-between;
+}
+/* 버튼: 프로젝트 홈 & 공유게시판 */
+.top {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.top .top-btn {
+	display: flex;
+}
+
+.top .top-btn .project-home-btn,
+.top .top-btn .project-board-btn,
+.top .top-btn .project-schedule-btn {
+	font-weight: 700;
+	width: 150px;
+	box-shadow: 0px 0 5px rgba(1, 41, 112, 0.1);
+}
+/* 프로젝트 홈 버튼 */
+.top .top-btn .project-home-btn {
+	border: 1px solid #82838542;
+	background-color: white;
+	transition: color 0.15s ease-in-out 0s, background-color 0.15s ease-in-out 0s, 
+	border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+	color: #012970;
+}
+
+.top .top-btn .project-home-btn:hover {
+	background-color: #b4b0b025;
+	color: #0d6efd;
+}
+
+/* 공유게시판 버튼 */
+.top .top-btn .project-board-btn {
+	margin-left: 9px;
+}
+
+/* 프로젝트 일정 버튼 */
+.top .top-btn .project-schedule-btn {
+	border: 1px solid #82838542;
+	background-color: white;
+	transition: color 0.15s ease-in-out 0s, background-color 0.15s ease-in-out 0s, 
+	border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+	color: #012970;
+	margin-left: 9px;
+	
+}
+
+.top .top-btn .project-schedule-btn:hover {
+	background-color: #b4b0b025;
+	color: #0d6efd;
+}
+
+/* 새 글쓰기 버튼 */
+.pboard-write .pboard-write-Btn.btn.btn-secondary{
+    position: absolute;
+    width: 100px;
+    right: 20px;
+    bottom: 10px;
+	font-weight: 800;
+	border: 1px solid #0d6efd;
+	color: #0d6efd;
+	background-color: white;
+    z-index: 3;
+    cursor: pointer;
+}
+.pboard-write .pboard-write-Btn.btn.btn-secondary:hover {
+	color: white;
+	background-color: #0d6efd;
+}
+/*========== 검색바&셀렉트박스 ==========*/
+/* 검색바 스타일 */
+.section.pboard .search-container {
+    display: flex;
+    z-index: 2;
+    margin-top: -75px;
+    position: absolute;
+    right: -5px;
+}
+
+.section.pboard .search-bar {
+    min-width: 360px;
+    padding: 0 20px;
+}
+
+.section.pboard .search-form {
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.section.pboard .search-form input {
+    font-size: 14px;
+    color: #012970;
+    border: 1px solid #c9c9c9;
+    padding: 7px 38px 7px 8px;
+    transition: 0.3s;
+    width: 100%;
+    height: 40px;
+    border-radius: 0 5px 5px 0; /* 검색바의 테두리를 둥글게 만듦 (우측만 둥글게) */
+}
+
+.section.pboard .search-form input:focus,
+.section.pboard .search-form input:hover {
+    outline: none;
+    border: 1px solid #c9c9c9;
+}
+
+.section.pboard .search-form button {
+    border: none;
+    padding: 0;
+    margin-left: -30px;
+    background: none;
+}
+
+
+/* 셀렉트 박스 스타일 */
+.section.pboard .search-container .search-bar select {
+    border: 1px solid #c9c9c9;
+    padding: 7px 38px 7px 8px;
+    background: white;
+    font-size: 14px;
+    text-align: left;
+    cursor: pointer;
+    height: 40px;
+    border-right: none;
+    border-radius: 5px 0 0 5px;
+    outline: none;
+}
+
+.section.pboard .search-container #dropdownSelect select:focus ,
+.section.pboard .search-container #dropdownSelect input:hover {
+    border: 1px solid #c9c9c9;
+    border-right: none;
+}
+
+/*========== 검색바&드롭박스 END ==========*/
+
+.controller .sort-filter {
+    border: 1px solid rgba(1, 41, 112, 0.2);
+    font-family: 'NanumSquare', sans-serif;
+    width: 230px;
+    height: 40px;
+}
+
+.table {
+    font-family: 'NanumSquare', sans-serif;
+    margin-bottom: 60px; /* 하단공백 */
+    border-collapse: collapse;
+}
+
+/* 테이블 리스트 헤더 */
+.table tr th:first-child {
+    width: 6%;
+    padding-left: 20px;
+}
+
+.table tr th:nth-child(2) {
+    width: 65%;
+}
+.table tr th:nth-child(3) {
+    width: 8%;
+}
+
+.table tr th:nth-child(4) {
+	width: 8%;
+}
+
+.table tr th:nth-child(5) {
+    width: 5%;
+    text-align: center;
+}
+
+.table tr th:last-child {
+    width: 5%;
+    text-align: center;
+}
+
+/* 테이블 리스트 */
+.table tr td{
+	font-size: 14.5px;
+}
+.table tr td:first-child {
+	width: 6%;
+	padding-left: 20px;
+}
+.table tr td:nth-child(2) {
+    width: 68%;
+}
+.table tr td:nth-child(3) {
+    width: 8%;
+}
+
+.table tr td:nth-child(4) {
+	width: 8%;
+}
+.table tr td:nth-child(5) {
+    width: 5%;
+    text-align: center;
+}
+
+.table tr td:last-child {
+    width: 5%;
+    text-align: center;
+}
+
+/* 리스트 제목, 작성자 */
+.table .list-item .subject:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.table .list-item .author:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+/*========== 쪽지 페이지 리스트 ==========*/
+.projectBoard-pagination-container {
+	position:absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: -55px;
+    right: 50%;
+    bottom: 10px;
+    transform: translateX(50%);
+}
+
+.projectBoard-pagination-container .pagination {
+    margin: 0;
+}
+
+.projectBoard-pagination-container .pagination li {
+    margin: 0; /* 각 번호 간격 조절 */
+    
+}
+
+.projectBoard-pagination-container .pagination a {
+    color: #8A8A8A;
+    font-weight: bold;
+    font-size: 13px;
+    text-decoration: none;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 35px;
+    height: 35px;
+    background-color: rgba(255, 255, 255, 0);
+}
+
+.projectBoard-pagination-container .pagination a:hover {
+     background-color: rgba(255, 255, 255, 0); /* 투명 배경 */
+}
+
+.projectBoard-pagination-container .pagination .active a {
+    background-color: rgba(255, 255, 255, 0); /* 투명 배경 */
+    color: #0D6DFD;
+    border: 1px solid #0D6DFD;
+}

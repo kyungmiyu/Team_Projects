@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "mybatis-3-config.dtd" >
+<configuration>
+   <typeAliases>
+      <typeAlias alias="KphProject" type="com.blackberry.s20240130103.kph.model.KphProject"/>
+      <typeAlias alias="KphTask" type="com.blackberry.s20240130103.kph.model.KphTask"/>
+      <typeAlias alias="KphUser_Project" type="com.blackberry.s20240130103.kph.model.KphUserProject"/>
+      <typeAlias alias="KphEval" type="com.blackberry.s20240130103.kph.model.KphEval"/>
+      <typeAlias alias="KphUsers" type="com.blackberry.s20240130103.kph.model.KphUsers"/>
+      <typeAlias alias="LslBoardComm" type="com.blackberry.s20240130103.lsl.model.LslBoardComm"/>
+      <typeAlias alias="LslCommReply" type="com.blackberry.s20240130103.lsl.model.LslCommReply"/>
+      <typeAlias alias="LslboardFile" type="com.blackberry.s20240130103.lsl.model.LslboardFile"/>
+      <typeAlias alias="LslUser" type="com.blackberry.s20240130103.lsl.model.LslUser"/>
+      <typeAlias alias="KdwMessage" type="com.blackberry.s20240130103.kdw.model.Message"/>
+      <typeAlias alias="KdwMessageFile" type="com.blackberry.s20240130103.kdw.model.MessageFile"/>
+      <typeAlias alias="KdwBoardProject" type="com.blackberry.s20240130103.kdw.model.BoardProject"/>
+      <typeAlias alias="KdwBoardProjectFile" type="com.blackberry.s20240130103.kdw.model.BoardProjectFile"/>
+      <typeAlias alias="YkmBoardComm" type="com.blackberry.s20240130103.ykm.model.YkmBoardComm"/>
+      <typeAlias alias="YkmBoardCommReply" type="com.blackberry.s20240130103.ykm.model.YkmBoardCommReply"/>
+      <typeAlias alias="YkmBoardCommFile" type="com.blackberry.s20240130103.ykm.model.YkmBoardCommFile"/>
+      <typeAlias alias="YkmPaging" type="com.blackberry.s20240130103.ykm.model.YkmPaging"/>
+      <typeAlias alias="Ask" type="com.blackberry.s20240130103.yhs.model.Ask"/>
+      <typeAlias alias="LhsAddress" type="com.blackberry.s20240130103.lhs.model.Address"/>
+      <typeAlias alias="LhsUser" type="com.blackberry.s20240130103.lhs.model.User"/>
+      <typeAlias alias="LhsBoardAdmin" type="com.blackberry.s20240130103.lhs.model.BoardAdmin"/>
+      <typeAlias alias="LhsBoardComm" type="com.blackberry.s20240130103.lhs.model.BoardComm"/>
+      <typeAlias alias="LhsReply" type="com.blackberry.s20240130103.lhs.model.Reply"/>
+      <typeAlias alias="LhsSchedule" type="com.blackberry.s20240130103.lhs.model.Schedule"/>
+      <typeAlias alias="KphProjectTask" type="com.blackberry.s20240130103.kph.model.KphProjectTask"/>
+      <typeAlias alias="KphUserTask" type="com.blackberry.s20240130103.kph.model.KphUserTask"/>
+      <typeAlias alias="KphBoardProject" type="com.blackberry.s20240130103.kph.model.KphBoardProject"/>
+      <typeAlias alias="KphBoardProjectReply" type="com.blackberry.s20240130103.kph.model.KphBoardProjectReply"/>
+      <typeAlias alias="KphBoardProjectFile" type="com.blackberry.s20240130103.kph.model.KphBoardProjectFile"/>
+      <typeAlias alias="KphUserBoardProject" type="com.blackberry.s20240130103.kph.model.KphUserBoardProject"/>
+      <typeAlias alias="KphUserBoardProjectReply" type="com.blackberry.s20240130103.kph.model.KphUserBoardProjectReply"/>
+   </typeAliases>
+</configuration>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blackberry.s20240130103.TaskMapper">
+					
+	<select id="kphUnCompTaskListByProjectNo" parameterType="Long" resultType="KphTask">
+		SELECT *
+		FROM TASK
+		WHERE PROJECT_NO = #{project_no}
+		AND TASK_COMP_CHK = 0
+		ORDER BY TASK_END
+	</select>
+	
+	<select id="kphCompTaskListByProjectNo" parameterType="Long" resultType="KphTask">
+		SELECT *
+		FROM TASK
+		WHERE PROJECT_NO = #{project_no}
+		AND TASK_COMP_CHK = 1
+		ORDER BY TASK_END
+	</select>
+	
+	<select id="kphTaskListByProjectNo" parameterType="KphTask" resultType="KphTask">
+		SELECT * 
+		FROM TASK
+		WHERE PROJECT_NO = #{project_no}
+		ORDER BY TASK_END
+	</select>
+	
+	<select id="kphGetTask" parameterType="KphTask" resultType="KphTask">
+		SELECT *
+		FROM TASK
+		WHERE PROJECT_NO = #{project_no}
+			AND TASK_NO = #{task_no}
+	</select>
+	
+	<delete id="kphTaskDelete" parameterType="KphTask">
+		DELETE FROM TASK
+		WHERE PROJECT_NO = #{project_no}
+			AND TASK_NO = #{task_no} 
+	</delete>
+	
+	<update id="kphTaskCompUpdate" parameterType="KphTask">
+		UPDATE TASK
+			  <if test="task_comp_chk==0">
+			  		SET TASK_COMP_CHK = 1, TASK_UPDATE_DATE = SYSDATE
+			  </if>
+			  <if test="task_comp_chk==1">
+			  		SET TASK_COMP_CHK = 0, TASK_UPDATE_DATE = SYSDATE
+			  </if>
+		WHERE PROJECT_NO = #{project_no}
+			AND TASK_NO = #{task_no} 
+	</update>
+	
+</mapper>

@@ -1,0 +1,129 @@
+@charset "UTF-8";
+
+@import
+	url('https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css')
+	;
+
+body {
+	font-family: 'NanumSquare', sans-serif;
+	margin: 0;
+	padding: 0;
+	box-shadow: 0 5px 20px 0 rgba(82, 63, 105, 0.2);
+}
+
+/* Card */
+.card {
+	width: 100%;
+	min-width: 800px;
+	height: 800px;
+	min-height: 500px;
+	margin-bottom: 0;
+	box-shadow: 0px 0 30px rgba(1, 41, 112, 0.1);
+	border: none;
+	border-radius: 5px;
+	padding: 25px 20px;
+	display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+/* 안쪽 섹션 */
+.msgSent-section {
+	/* border: 1px solid red; */
+	width:100%;
+	height: 800px;
+	min-width: 800px;
+	min-height: 500px;
+	border-radius: 5px;
+	position:relative;
+	display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+#msgSent-form {
+	position: absolute;
+	margin-top: 50px;
+}
+
+/* shake 애니메이션 스타일 추가 */
+@keyframes jump-shaking {
+  0% { transform: translateX(0) }
+  25% { transform: translateY(-9px) }
+  35% { transform: translateY(-9px) rotate(17deg) }
+  55% { transform: translateY(-9px) rotate(-17deg) }
+  65% { transform: translateY(-9px) rotate(17deg) }
+  75% { transform: translateY(-9px) rotate(-17deg) }
+  100% { transform: translateY(0) rotate(0) }
+}
+
+
+
+/* 아이콘 스타일 수정 */
+.msg-fontAS .far.fa-envelope {
+    position: absolute;
+    margin-top: -122px;
+    margin-left: -18px;
+    font-size: 37px; /* 아이콘 크기 조절 */
+    color: #0D6DFD; /* 아이콘 색상 지정 */
+    z-index: 1;
+    animation: jump-shaking 0.7s infinite; /* shake 애니메이션 추가 */
+}
+
+/* 동그라미 스타일 */
+.msgSent-model .circle {
+	position: absolute;
+	margin-top: -105px;
+	
+	width: 75px;
+	height: 75px;
+	
+	background-color: #cae2ff; /* 원하는 색상 선택 */
+	border-radius: 50%;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+/* 쪽지를 성공적으로 보냈습니다 */
+.msgSent-textBox {
+	position: absolute;
+	margin-top: -40px;
+	margin-left: -105px;
+	font-size: 17px;
+	font-weight: 500;
+	width: 300px;
+}
+
+/* 쪽지목록 버튼, 쪽지쓰기 버튼 스타일 수정 */
+.msg-receivebox-btn, .msg-write-btn {
+	position: absolute;
+    width: 100px;
+    height: 35px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    color: #546270;
+    font-size: 16px;
+    font-weight: 800;
+    text-align: center;
+    line-height: 2.1;
+    
+    margin-left:-100px;
+}
+
+.msg-receivebox-btn {
+	margin-right:-50px;
+}
+
+.msg-write-btn {
+	margin-left:5px;
+}
+
+.msg-receivebox-btn:hover, .msg-write-btn:hover,
+.msg-receivebox-btn:active, .msg-write-btn:active {
+    background-color: #0D6DFD;
+    color: #ffffff; 
+    border: #0D6DFD;
+}

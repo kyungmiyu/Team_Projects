@@ -1,0 +1,86 @@
+@import url('https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css');
+
+
+/*--------------------------------------------------------------
+# section
+--------------------------------------------------------------*/
+/* Card */
+.card {
+	margin: 0 auto;
+	padding: 20px;
+    width: 80%;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0px 0 30px rgba(1, 41, 112, 0.1);
+}
+  
+.card> p {
+    font-family:'NanumSquare', sans-serif;
+    color: #0d6efd;
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.address-list {
+	display: flex;
+	flex-wrap: wrap;
+	height: 70%;
+	gap: 20px;
+	overflow-y: auto;
+	font-family:'NanumSquare', sans-serif;
+}
+
+.address-list .address-list-card {
+	display: flex;
+	align-items: center;
+	border: 1px solid rgba(163, 162, 162, 0.473);
+	border-radius: 10px;
+	height: 100px;
+	width: 32%;
+    padding: 20px 20px 20px 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0px 0 10px rgba(1, 41, 112, 0.1);
+}
+
+.address-list-card .address-list-card-detail {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.address-list-card-detail .profile-img-user-name {
+	display: flex;
+	align-items: center;
+	width: 70%;
+}
+
+.profile-img-user-name .address-list-profile-img {
+	width: 40px;
+	height: 40px;
+	margin-right: 15px;
+}
+
+.profile-img-user-name .user-name {
+	margin-bottom: -5px;
+	font-weight: 700;
+	font-size: 1.15rem;
+}
+
+.profile-img-user-name .user-id {
+	margin-bottom: -5px;
+}
+
+.address-list-card-detail .form-check {
+}
+
+.form-check input {
+	width: 20px;
+    height: 20px;
+	border: 1px solid #0d6dfd80;
+}
+
+.text-center {
+	margin-top: 30px;
+}

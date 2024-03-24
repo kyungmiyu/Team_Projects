@@ -1,0 +1,183 @@
+@import url("https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css");
+
+/*--------------------------------------------------------------
+# section
+--------------------------------------------------------------*/
+
+/* top */
+section {
+  position: relative;
+}
+
+.team-member-add-box-no-authority,
+.project-delete-box {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid black;
+  border-radius: 10px;
+  border: 1px solid rgba(163, 162, 162, 0.473);
+  background-color: white;
+  padding: 20px;
+  width: 400px;
+  height: 200px;
+  position: absolute;
+  top: 20%;
+  left: 40%;
+  z-index: 1;
+  box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.1);
+  font-family: "NanumSquare", sans-serif;
+}
+
+.team-member-add-box-no-authority > div,
+.project-delete-box > div {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.team-member-add-box-no-authority-title,
+.project-delete-box-title {
+  font-size: 1.25rem;
+  text-align: center;
+  width: 100%;
+  font-weight: 800;
+  margin-bottom: 20px;
+}
+
+.delete-btn-list {
+  margin: 0 auto;
+}
+
+.authority-cancle,
+.check-btn,
+.cancle-btn {
+  margin: 0 auto;
+  width: 100px;
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.top .top-btn {
+  display: flex;
+}
+
+.top .top-btn .btn {
+  font-family: "NanumSquare", sans-serif;
+  font-weight: 700;
+  width: 150px;
+  margin-right: 9px;
+  box-shadow: 0px 0 5px rgba(1, 41, 112, 0.1);
+}
+
+.top .top-btn .project-board-btn {
+  border: 1px solid #82838542;
+  background-color: white;
+  transition: color 0.15s ease-in-out 0s, background-color 0.15s ease-in-out 0s,
+    border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+  color: #012970;
+}
+
+.top .top-btn .project-board-btn:hover {
+  background-color: #b4b0b025;
+  color: #0d6efd;
+}
+
+/* project home */
+
+.project-home {
+  margin-top: 15px;
+  margin-bottom: -10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.project-home .card {
+  margin-bottom: 30px;
+  padding: 20px 20px 20px 20px;
+  height: 700px;
+  border: none;
+  background-color: white;
+  background-position: none;
+  border-radius: 10px;
+  box-shadow: 0px 0 30px rgba(1, 41, 112, 0.1);
+  overflow-y: auto;
+}
+
+.project-home .card h5 {
+  font-family: "NanumSquare", sans-serif;
+  font-weight: 800;
+  color: #0d6efd;
+  margin-bottom: 0;
+}
+
+/* project home - task card*/
+
+.project-home .schedule-card {
+  width: 100%;
+}
+.schedule-card-head {
+  padding: 5px 10px;
+  margin-bottom: 10px;
+}
+.schedule-list {
+  min-height: 90%;
+  overflow-y: scroll;
+  padding: 30px 30px;
+  display: flex;
+  flex-wrap: wrap;
+  background-color: rgba(247, 247, 247, 0.947);
+}
+.schedule-list::-webkit-scrollbar {
+  display: none;
+}
+.schedule-content {
+  border: 1px solid rgba(72, 71, 71, 0.294);
+  width: 30%;
+  height: 200px;
+  border-radius: 10px;
+  margin: 13px 16px;
+  padding: 8px 5px;
+  background-color: white;
+}
+.schedule-content-title {
+  height: 40px;
+  align-items: center;
+}
+.schedule-content-title p {
+  margin: 0 0 !important;
+}
+.schedule-content-title p {
+  font-family: "NanumSquare", sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  text-indent: 12px;
+}
+.schedule-content-title div {
+  display: flex;
+  align-items: center;
+}
+.schedule-content-title button {
+  border: none;
+  background-color: white;
+  margin-right: 5px;
+}
+.schedule-content-body {
+  height: 80%;
+  padding: 25px 20px;
+}
+
+.schedule-contents {
+  font-family: "NanumSquare", sans-serif;
+  font-size: 17px;
+  font-weight: 400;
+}
+.schedule-contents:first-child {
+  margin-bottom: 23px;
+}
+.schedule-contents i {
+  margin-right: 10px;
+}

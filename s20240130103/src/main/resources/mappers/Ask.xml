@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blackberry.s20240130103.yhs.AskMapper">
+    
+    <select id="askTotal" parameterType="Ask"  resultType="int">
+		SELECT count(*) FROM BOARD_ADMIN ba where ba.user_no=#{user_no}
+   </select>
+	
+   <select id="yhsAskListAll" parameterType="Ask" resultType="Ask">
+     <![CDATA[
+		SELECT *
+		FROM(SELECT rownum rn, a.*
+			FROM (SELECT ba.*, u.user_name, u.user_nic
+  			FROM BOARD_ADMIN ba
+  			INNER JOIN users u ON ba.user_no = u.user_no
+  			WHERE ba.user_no = #{user_no}
+  			ORDER BY ADMIN_date DESC) a)
+		WHERE  rn  >= #{start} 
+ 		and    rn  <= #{end}    
+ 	 ]]>		
+   </select>
+   
+   <select id="yhsAskContent" parameterType="Ask"
+		resultType="Ask">
+		SELECT ba.*, u.USER_NIC, u.user_name,u.user_id
+		FROM BOARD_ADMIN ba
+		INNER JOIN USERS u ON ba.USER_NO = u.USER_NO
+		WHERE ba.user_no=#{user_no}
+		AND ba.admin_no=#{admin_no}
+	</select>
+	
+
+	<insert id="yhsInsertAsk" parameterType="Ask">
+		INSERT INTO BOARD_ADMIN (USER_NO,
+								ADMIN_NO,
+								ADMIN_DATE,
+								ADMIN_TITLE,
+								ADMIN_CONTENT,
+								ADMIN_START,
+								admin_reply_group,					
+								ADMIN_REPLY_CHK)
+		VALUES (#{user_no},
+				(select NVL(MAX(admin_no),0)+1 from board_admin where user_no = #{user_no}), 
+				sysdate,
+				#{admin_title},
+				#{admin_content},
+				<choose>
+					<when test='admin_start == null'>
+						null,
+					</when>
+					<otherwise>
+						#{admin_start}, 
+					</otherwise>
+				</choose>
+				(select NVL(MAX(admin_no),0)+1 from board_admin where user_no = #{user_no}), 
+				0)
+	</insert>	
+		 
+		 
+	<delete id="yhsDeleteAsk" parameterType="int">
+	    delete from BOARD_ADMIN where admin_no=#{admin_no}
+   </delete>
+   
+   <select id="yhsSelectAskResponseOne" resultType="Ask" parameterType="Ask">
+   		SELECT ba.*, u.USER_NIC, u.user_name,u.user_id
+		FROM BOARD_ADMIN ba
+		INNER JOIN USERS u ON ba.USER_NO = u.USER_NO
+		WHERE ba.admin_reply_user=#{user_no}
+		AND ba.admin_reply_group=#{admin_no}
+   </select>
+   
+   
+    
+</mapper>

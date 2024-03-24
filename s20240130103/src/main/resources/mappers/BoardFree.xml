@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.blackberry.s20240130103.lsl.BoardFreeMapper">
+	<select id="sltotalBoardFreeList" resultType="int">
+		select count(*)
+		from board_comm
+		where CBOARD_DELETE_CHK = 0
+		AND comm_big=300
+		AND comm_mid=20
+	</select>
+
+	<select id="slBoardFreeListAll" parameterType="LslBoardComm"
+		resultType="LslBoardComm">
+   	<![CDATA[
+	 SELECT *
+		from
+			(SELECT rownum rn ,a.*
+			from
+				(SELECT bc.*, nvl(cnt,0) creply_cnt, u.user_name, u.user_nic, u.user_id
+				FROM BOARD_COMM bc,
+						(SELECT CBOARD_NO, count(*) cnt 
+						FROM BOARD_COMM_REPLY 
+						WHERE CREPLY_DELETE_CHK = 0
+						GROUP BY CBOARD_NO) bcr,
+						users u
+				WHERE bc.CBOARD_NO =bcr.CBOARD_NO(+)
+				AND comm_big=300
+				AND comm_mid=20
+				AND	bc.CBOARD_DELETE_CHK = 0
+				AND bc.user_no = u.user_no
+				order by cboard_date DESC) a)
+		WHERE  rn >= #{start}
+		 and		rn <=#{end}
+ 		]]>
+	</select>
+
+	<select id="sltotalBoardSearchFree" parameterType="java.util.Map" resultType="int">
+		SELECT count(*)
+		FROM BOARD_COMM bc, USERS u
+		WHERE bc.USER_NO = u.USER_NO
+		AND bc.COMM_MID = 20
+		AND bc.COMM_BIG = 300
+		AND bc.CBOARD_DELETE_CHK = 0
+		AND (
+		    	(#{type} = 'all' AND (
+		        u.user_nic LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\' 
+		        OR bc.cboard_title LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\' 
+		        OR bc.cboard_content LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\' 
+		    ))
+    OR
+    (#{type} = 'writer' AND u.user_nic LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\')
+    OR
+    (#{type} = 'titleContent' AND (
+        bc.cboard_title LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'
+        OR bc.cboard_content LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'
+    ))
+)
+
+
+	</select>
+
+	<select id="slboardFreeSearch" parameterType="LslBoardComm" resultType="LslBoardComm">
+		   SELECT *
+			FROM (
+				    SELECT rownum rn, a.*
+				    FROM (
+				      		 SELECT *
+							 FROM (
+										SELECT bc.*, u.user_nic, bcr.creply_cnt
+										FROM BOARD_COMM bc, USERS u, (
+																						SELECT CBOARD_NO, COUNT(CREPLY_NO) creply_cnt
+																						FROM BOARD_COMM_REPLY 
+																						GROUP BY CBOARD_NO
+																						 ) bcr
+										WHERE bc.CBOARD_NO = bcr.CBOARD_NO(+)
+											AND bc.USER_NO = u.USER_NO 
+										) bc
+					WHERE bc.COMM_MID = 20
+					     AND bc.COMM_BIG = 300
+					     AND bc.CBOARD_DELETE_CHK = 0
+					     AND (
+				                (#{type} = 'all' AND (
+				                    bc.USER_NIC LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\' 
+				                    OR bc.cboard_title LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\' 
+				                    OR bc.cboard_content LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\' 
+				                ))
+				           OR (#{type} = 'writer' AND bc.USER_NIC LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\')
+				           OR (#{type} = 'titleContent' AND (
+				                    bc.cboard_title LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'
+				                    OR bc.cboard_content LIKE '%' || REPLACE(REPLACE(#{keyword}, '_', '\_'), '%', '\%') || '%' ESCAPE '\'
+				                ))
+				                )
+					ORDER BY bc.cboard_no DESC
+				    		) a
+				)  
+				WHERE rn BETWEEN #{start} AND #{end}
+
+	</select>
+
+
+
+	<select id="slboardFreeContents" parameterType="int"
+		resultType="LslBoardComm">
+		SELECT bc.*, u.USER_NIC, u.user_profile
+		FROM BOARD_COMM bc
+		INNER JOIN USERS u
+		ON bc.USER_NO = u.USER_NO
+		WHERE bc.CBOARD_NO = #{cboard_no}
+		AND
+		CBOARD_DELETE_CHK = 0
+	</select>
+
+
+	<insert id="slboardFreeWriteInsert" parameterType="LslBoardComm"
+		useGeneratedKeys="true" keyColumn="cboard_no" keyProperty="cboard_no">
+		INSERT INTO
+		BOARD_COMM
+		VALUES (SEQ_BOARD_COMM.nextval, #{cboard_title},
+		#{cboard_content}, 0 ,
+		sysdate, #{user_no}, 0, 300, 20,NULL, NULL,
+		NULL)
+	</insert>
+
+	<insert id="slSaveBoarFreedFile" parameterType="LslboardFile">
+		INSERT INTO
+		BOARD_COMM_FILE
+		(cboard_no,
+		cboard_file_name,
+		cboard_file_user_name,
+		cboard_file_cnt
+		VALUES(
+		#{cboard_no},
+		#{cboard_file_name},
+		#{cboard_file_user_name},
+		(SELECT
+		NVL(MAX(cboard_file_cnt), 0) + 1
+		FROM
+		BOARD_COMM_FILE
+		WHERE cboard_no = #{cboard_no})
+		)
+	</insert>
+
+
+	<update id="slboardFreeViewCnt" parameterType="LslBoardComm">
+		update board_comm
+		set CBOARD_VIEWCNT = CBOARD_VIEWCNT+1 where cboard_no=#{cboard_no}
+	</update>
+
+	<update id="sldeleteFreeBoard" parameterType="int">
+		update board_comm
+		set CBOARD_DELETE_CHK = 1, COMM_UPDATE_DATE = sysdate
+		where cboard_no =
+		#{cboard_no}
+	</update>
+
+	<select id="slboardFreeModify" parameterType="int"
+		resultType="LslBoardComm">
+		select bc.*
+		from board_comm bc
+		where bc.cboard_no = #{cboard_no}
+	</select>
+
+	<!-- 게시판 파일 정보 && 파일 상세 정보 표시 -->
+	<select id="slboardFreeFiles" resultType="LslboardFile">
+		SELECT cboard_no, cboard_file_name, cboard_file_user_name, cboard_file_cnt
+		FROM BOARD_COMM_FILE
+		WHERE cboard_no = #{cboard_no}
+	</select>
+
+
+	<select id="slboardCommFreeFileList"
+		parameterType="LslBoardComm" resultType="java.util.List">
+		SELECT *
+		FROM BOARD_COMM
+		WHERE cboard_no = #{cboard_no}
+	</select>
+
+	<select id="slFileListInBoard" parameterType="LslBoardComm"
+		resultType="LslboardFile">
+		SELECT *
+		FROM BOARD_COMM_FILE
+		WHERE cboard_no = #{cboard_no}
+	</select>
+</mapper>

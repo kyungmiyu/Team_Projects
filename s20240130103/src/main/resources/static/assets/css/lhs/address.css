@@ -1,0 +1,123 @@
+@charset "UTF-8";
+
+.maindiv{
+	width: 100%;
+    height: 750px;
+    min-height: 500px;
+    min-width: 500px;
+    background-color: white;
+    border-radius: 5px;
+}
+.navmargin{
+	margin-left: 10px;
+}
+.nav-tabs-bordered{
+	border-bottom: 0;
+}
+.width300{
+	width: 300px;
+}
+.address-top{
+    padding: 1% 1%;
+    justify-content: space-between;
+}
+
+.top-left *{
+    margin-left: 2%;
+}
+
+.address-main{
+    width: 98%;
+    height: 90%;
+    margin : auto auto;
+    border-radius: 20px;
+    display: flex;
+    overflow-y: auto;
+    flex-wrap: wrap;
+    padding: 2% 2%;
+    gap : 20px;
+    align-content: flex-start;
+}
+.address-main-inner{
+    display: flex;
+	align-items: center;
+	width: 30%;
+	height: 100px;
+	border-radius: 5px;
+    background-color: white;
+    border: 1px solid rgba(163, 162, 162, 0.473);
+    color: #212529;
+    box-shadow: 0 0 10px rgba(1, 41, 112, 0.1);
+	font-family: 'NanumSquare', sans-serif;
+    
+}
+.address-list-card-detail {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+	margin: 20px;
+}
+
+.address-list-card-detail .profile-img-user-name {
+	display: flex;
+	justify-content: initial;
+	align-items: center;
+	width: 60%;
+}
+
+.address-list-card-detail .user-id {
+	margin-bottom: 0;
+	margin-left: 10px;
+	font-weight: 400;
+	font-size: small;
+	color: #999393;
+	margin-top: -3px;
+}
+
+.address-list-card-detail .address-list-profile-img {
+	width: 30px;
+	height: 30px;
+}
+
+.address-list-card-detail .user-name {
+	margin-bottom: 0;
+	margin-left: 10px;
+	font-weight: 700;
+}
+
+.address-list-card-detail .score-message {
+	display: flex;
+	align-items: center;
+}
+
+.address-list-card-detail .user-score {
+	background-color: #0d6efd;
+    color: white;
+	width: 40px;
+	height: 40px;
+	text-align: center;
+	line-height: 40px;
+}
+
+.score-message div {
+	margin-left: 5px;
+	display: flex;
+	align-items: center;
+}
+.address-list-card-detail form {
+	margin-left: 5px;
+	display: flex;
+	align-items: center;
+}
+.address-list-card-detail .message {
+	width: 40px;
+	height: 40px;
+	background-color: #0d6efd;
+    color: white;
+	border: none;
+}
+
+.address-list-card .message i {
+	color: white;
+}

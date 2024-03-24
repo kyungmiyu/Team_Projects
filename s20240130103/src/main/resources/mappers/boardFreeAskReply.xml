@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.blackberry.s20240130103.boardFreeAskReplyMapper">
+
+	<select id="slreplyBoardFreeAskList" parameterType="int" resultType="LslCommReply">
+		SELECT bcr.*, u.*
+		FROM BOARD_COMM_REPLY bcr
+		JOIN USERS u ON bcr.USER_NO = u.USER_NO
+		WHERE bcr.CREPLY_DELETE_CHK = 0
+		AND bcr.cboard_no = #{cboard_no}
+		ORDER BY
+		bcr.CREPLY_GROUP DESC,
+		bcr.CREPLY_LEVEL ASC,
+		bcr.CREPLY_DATE DESC
+
+</select>
+
+
+	<insert id="slInsertBoardReply" parameterType="LslCommReply">
+		INSERT INTO
+		BOARD_COMM_REPLY (CREPLY_NO, CREPLY_CONTENT, CREPLY_DATE,
+		CREPLY_GROUP, CREPLY_LEVEL, CREPLY_INDENT, CBOARD_NO, USER_NO,
+		CREPLY_DELETE_CHK, COMM_UPDATE_DATE)
+		VALUES
+		(SEQ_BOARD_COMM_REPLY.NEXTVAL, #{creply_content}, sysdate,
+		SEQ_BOARD_COMM_REPLY.CURRVAL , 0, 0, #{cboard_no}, #{user_no}, 0,
+		NULL)
+	</insert>
+
+
+	<update id="slDeleteBoardReply" parameterType="int">
+		UPDATE
+		BOARD_COMM_REPLY
+		SET CREPLY_DELETE_CHK = 1, COMM_UPDATE_DATE = SYSDATE
+		WHERE CREPLY_NO = #{CREPLY_NO}
+	</update>
+
+	<update id="slmodifyBoardReply" parameterType="LslCommReply">
+		UPDATE
+		BOARD_COMM_REPLY
+		SET CREPLY_CONTENT = #{creply_content},
+		COMM_UPDATE_DATE = SYSDATE
+		WHERE CREPLY_NO = #{creply_no}
+	</update>
+
+	<select id="slboardReplyCnt" parameterType="int"
+		resultType="int">
+		SELECT COUNT(bcr.CREPLY_NO)
+		FROM BOARD_COMM bc ,
+		BOARD_COMM_REPLY bcr
+		WHERE bc.CBOARD_NO = bcr.CBOARD_NO
+		AND bc.CBOARD_NO = #{CBOARD_NO}
+		AND bcr.CREPLY_DELETE_CHK = 0
+	</select>
+
+
+	<!-- 대댓글 -->
+	<insert id="slInsertBoardReReply" parameterType="LslCommReply">
+		INSERT INTO
+    board_comm_reply (
+    creply_no,
+    creply_content,
+    creply_date,
+    creply_group,
+    creply_level,
+    creply_indent,
+    cboard_no,
+    user_no,
+    creply_delete_chk,
+    comm_update_date
+    )
+    VALUES (
+    SEQ_BOARD_COMM_REPLY.NEXTVAL,
+    #{creply_content},
+    SYSDATE,
+    #{creply_group},
+	#{creply_level},
+   	#{creply_indent},
+    #{cboard_no},
+    #{user_no},
+    0,
+    SYSDATE
+    )
+
+	</insert>
+	<select id="slreReply" parameterType="LslCommReply" resultType="LslCommReply">
+		select *
+		from board_comm_reply
+		where creply_no = #{creply_no}
+	</select>
+	
+	
+	<update id="slupdateReply" parameterType="LslCommReply">
+	update board_comm_reply
+		set creply_level = creply_level+1
+		where creply_group = #{creply_group}
+		and creply_level >= #{creply_level}
+	</update>
+
+
+</mapper>

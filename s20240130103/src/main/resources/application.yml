@@ -1,0 +1,50 @@
+server:
+  port: 8989
+
+# Oracle Connect
+spring:
+  thymeleaf:
+    cache: false
+    suffix: .html
+    prefix: classpath:/templates/
+    view-names: thymeleaf/*
+  mvc:
+    view:
+      prefix: /WEB-INF/views/ # JSP 파일이 위치할 기본 위치 설정
+      suffix: .jsp    # JSP 확장자 설정
+  
+  # File Size
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+      
+  datasource:
+    driver-class-name: oracle.jdbc.OracleDriver
+    url: jdbc:oracle:thin:@13.125.91.195:1521/xe
+    username: s20240130103
+    password: tiger
+
+  # Jpa Setting
+  jpa:
+    showsql : true
+    hibernate:
+      ddl-auto: none
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: dlgkstnrn@gmail.com
+    password: vbvd ldma phqc kpno
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls.enable: true
+
+mybatis:
+  config-location: classpath:configuration.xml
+  mapper-locations: classpath:mappers/*.xml
+
+logging.level:
+  org.hibernate.SQL: debug   # logger를 통해 하이버네이트 실행 SQL

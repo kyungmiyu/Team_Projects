@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blackberry.s20240130103.KphBoardProjectReplyMapper">
+					
+	<select id="KphReplyGroupListByPboardNo" parameterType="java.lang.Long" resultType="java.lang.Long">
+		SELECT PREPLY_GROUP
+		FROM (SELECT *
+				FROM BOARD_PROJECT_REPLY
+				WHERE PBOARD_NO = #{pboard_no}
+					AND PREPLY_NO NOT IN (
+														SELECT PREPLY_NO
+														FROM BOARD_PROJECT_REPLY bpr 
+														WHERE bpr.PBOARD_NO = #{pboard_no}
+															AND bpr.PREPLY_LEVEL = 0
+															AND bpr.PREPLY_DELETE_CHK = 1
+															AND bpr.PREPLY_GROUP IN (
+																									SELECT PREPLY_GROUP
+																									FROM BOARD_PROJECT_REPLY bpr2 
+																									WHERE bpr2.PBOARD_NO = #{pboard_no}
+																									GROUP BY bpr2.PREPLY_GROUP
+																									HAVING COUNT(bpr2.PREPLY_NO) = 1
+																									)
+														)
+					AND PREPLY_GROUP NOT IN (SELECT bpr3.PREPLY_GROUP
+															FROM (SELECT PREPLY_GROUP, COUNT(PREPLY_NO) cnt1
+																		FROM BOARD_PROJECT_REPLY 
+																		WHERE PBOARD_NO = #{pboard_no}
+																		AND PREPLY_DELETE_CHK = 1
+																		GROUP BY PREPLY_GROUP
+																		HAVING COUNT(PREPLY_NO) > 1) bpr3,
+																		(SELECT PREPLY_GROUP, COUNT(PREPLY_NO) cnt2
+																		FROM BOARD_PROJECT_REPLY
+																		WHERE PBOARD_NO = #{pboard_no}
+																		GROUP BY PREPLY_GROUP) bpr4
+															WHERE bpr3.PREPLY_GROUP = bpr4.PREPLY_GROUP
+																AND bpr3.cnt1 = bpr4.cnt2)
+					AND PREPLY_NO NOT IN (SELECT PREPLY_NO  
+														FROM BOARD_PROJECT_REPLY 
+														WHERE PBOARD_NO = #{pboard_no}
+															AND PREPLY_LEVEL > 0
+															AND PREPLY_DELETE_CHK = 1)
+				ORDER BY PREPLY_GROUP DESC, PREPLY_LEVEL ASC)
+		GROUP BY PREPLY_GROUP
+	</select>
+	
+	<select id="KphBoardProjectReplyCnt" parameterType="java.lang.Long" resultType="int">
+		SELECT COUNT(*)
+		FROM BOARD_PROJECT_REPLY
+		WHERE PBOARD_NO = #{pboard_no}
+			AND PREPLY_DELETE_CHK = 0
+	</select>
+	
+	<insert id="KphboardProjectReplyAdd" useGeneratedKeys="true" parameterType="KphBoardProjectReply" keyColumn="preply_no" keyProperty="preply_no">
+		INSERT INTO BOARD_PROJECT_REPLY
+		VALUES (SEQ_PBOARD_REPLY.NEXTVAL, #{preply_content}, SYSDATE, SEQ_PBOARD_REPLY.NEXTVAL, 0, 0, #{pboard_no}, #{user_no}, 0, null)
+	</insert>
+	
+	<select id="KphIsUserInIndentZero" parameterType="KphBoardProjectReply" resultType="int">
+		SELECT COUNT(PREPLY_NO)
+		FROM BOARD_PROJECT_REPLY bpr  
+		WHERE PREPLY_GROUP = #{preply_group}
+			AND PREPLY_LEVEL > 0
+			AND PREPLY_INDENT = 0
+			AND PREPLY_DELETE_CHK = 0
+			AND USER_NO IN (SELECT u.USER_NO FROM USERS u WHERE u.USER_NAME = #{tagName})
+	</select>
+	
+	<insert id="KphboardProjectReplyReplyAdd" useGeneratedKeys="true" parameterType="KphBoardProjectReply" keyColumn="preply_no" keyProperty="preply_no">
+		INSERT INTO BOARD_PROJECT_REPLY
+		VALUES (SEQ_PBOARD_REPLY.NEXTVAL, 
+					#{preply_content}, 
+					SYSDATE, 
+					#{preply_group}, 
+					(SELECT MAX(PREPLY_LEVEL) + 1
+					FROM BOARD_PROJECT_REPLY
+					WHERE PREPLY_GROUP = #{preply_group}), 
+					#{preply_indent}, 
+					#{pboard_no}, 
+					#{user_no}, 
+					0, 
+					null)
+	</insert>
+	
+	<update id="KphBoardProjectReplyDelete" parameterType="java.lang.Long">
+		UPDATE BOARD_PROJECT_REPLY
+		SET PREPLY_DELETE_CHK = 1, PREPLY_UPDATE_DATE = SYSDATE
+		WHERE PREPLY_NO = #{preply_no}
+	</update>
+	
+	<update id="KphUpdateBoardProjectReply" parameterType="KphBoardProjectReply">
+		UPDATE BOARD_PROJECT_REPLY
+		SET PREPLY_CONTENT = #{preply_content}, PREPLY_UPDATE_DATE = SYSDATE
+		WHERE PREPLY_NO = #{preply_no}
+	</update>
+	
+	<update id="KphboardProjectReplyReplyUpdate" parameterType="KphBoardProjectReply">
+		UPDATE BOARD_PROJECT_REPLY
+		SET PREPLY_CONTENT = #{preply_content}, PREPLY_INDENT= #{preply_indent}, PREPLY_UPDATE_DATE = SYSDATE
+		WHERE PREPLY_NO = #{preply_no}
+	</update>
+	
+</mapper>
